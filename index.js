@@ -34,6 +34,7 @@ app.all("/", (req, res) => {
 });
 
 app.use("/rooms", require("./src/routes/roomRouter"));
+app.use("/users", require("./src/routes/userRouter"));
 /* ------------------------------------------------------- */
 
 // errorHandler:
