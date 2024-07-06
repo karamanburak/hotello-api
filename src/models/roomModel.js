@@ -23,13 +23,13 @@ const RoomSchema = new mongoose.Schema(
       enum: ["Small Bed", "Medium Bed", "Large Bed"],
     },
     price: {
-      type: Number,
+      type: String,
       required: true,
     },
   },
   {
     collection: "rooms",
-    timestamps: "true",
+    timestamps: true,
   }
 );
 

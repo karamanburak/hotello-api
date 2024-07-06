@@ -23,7 +23,7 @@ dbConnection();
 /* -------------------------------------------------------------------------- */
 app.use(express.json());
 
-require("./src/middlewares/findSearchSortPagi");
+app.use(require("./src/middlewares/findSearchSortPagi"));
 
 /* -------------------------------------------------------------------------- */
 /*                               ROUTES                                       */
@@ -32,6 +32,8 @@ require("./src/middlewares/findSearchSortPagi");
 app.all("/", (req, res) => {
   res.send("<h1>Welcome to the Hotel API</h1>");
 });
+
+app.use("/rooms", require("./src/routes/roomRouter"));
 /* ------------------------------------------------------- */
 
 // errorHandler:
