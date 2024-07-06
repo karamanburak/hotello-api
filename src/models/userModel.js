@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 const { mongoose } = require("../configs/dbConnection");
 const validator = require("validator");
+const passwordEncrypt = require("../helpers/passwordEncrypt");
 /* ------------------------------------------------------- */
 
 const UserSchema = new mongoose.Schema(
@@ -19,7 +20,8 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       required: true,
       minLength: 8,
-      // select:false
+      // select: false,
+      set: (password) => passwordEncrypt(password),
     },
     email: {
       type: String,
