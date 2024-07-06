@@ -2,4 +2,4 @@
 
 ### ERD:
 
-![ERD](./erdHotelAPI.png)
+![ERD](./erdHotelApi.png)
