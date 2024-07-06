@@ -11,6 +11,7 @@ router.route("/").get(user.list).post(user.create);
 
 router
   .route("/:id")
+  .all(idValidation)
   .get(user.read)
   .put(user.update)
   .patch(user.update)
