@@ -40,5 +40,14 @@ module.exports = {
       throw new Error("Email or Password required!");
     }
   },
-  logout: async (req, res) => {},
+  logout: async (req, res) => {
+    // console.log(req.user);
+    const deleted = await Token.deleteOne({ userId: req.user._id });
+
+    res.status(deleted.deletedCount > 0 ? 200 : 404).send({
+      error: !deleted.deletedCount,
+      deleted,
+      message: deleted.deletedCount > 0 ? "Logout OK" : "Logout Failed!",
+    });
+  },
 };

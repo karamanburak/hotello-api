@@ -6,9 +6,9 @@
 // SYCHRONIZATION:
 
 const mongoose = require("mongoose");
+const User = require("../models/userModel");
 const Room = require("../models/roomModel");
 const Reservation = require("../models/reservationModel");
-const User = require("../models/userModel");
 
 module.exports = async function () {
   /* REMOVE DATABASE */

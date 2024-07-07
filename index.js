@@ -25,6 +25,8 @@ app.use(express.json());
 
 app.use(require("./src/middlewares/findSearchSortPagi"));
 
+app.use(require("./src/middlewares/authentication"));
+
 /* -------------------------------------------------------------------------- */
 /*                               ROUTES                                       */
 /* -------------------------------------------------------------------------- */
