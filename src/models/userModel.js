@@ -20,8 +20,8 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       required: true,
       minLength: 8,
-      // select: false,
       set: (password) => passwordEncrypt(password),
+      select: false,
     },
     email: {
       type: String,
@@ -44,7 +44,7 @@ const UserSchema = new mongoose.Schema(
     },
   },
   {
-    collection: "user",
+    collection: "users",
     timestamps: true,
   }
 );

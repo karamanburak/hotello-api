@@ -47,7 +47,7 @@ const ResevationSchema = new mongoose.Schema(
     },
   },
   {
-    collection: "reservation",
+    collection: "reservations",
     timestamps: true,
   }
 );

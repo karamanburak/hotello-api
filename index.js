@@ -30,9 +30,13 @@ app.use(require("./src/middlewares/findSearchSortPagi"));
 /* -------------------------------------------------------------------------- */
 
 app.all("/", (req, res) => {
-  res.send("<h1>Welcome to the Hotel API</h1>");
+  res.send({
+    message: "<h1>Welcome to the Hotel API</h1>",
+    user: req.user,
+  });
 });
 
+app.use("/auth", require("./src/routes/authRouter"));
 app.use("/rooms", require("./src/routes/roomRouter"));
 app.use("/users", require("./src/routes/userRouter"));
 app.use("/reservations", require("./src/routes/reservationRouter"));
