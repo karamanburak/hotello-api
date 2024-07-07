@@ -1,27 +1,33 @@
-const jwt = require("jsonwebtoken");
+"use strict";
+/* -------------------------------------------------------
+    EXPRESS - HOTEL API
+------------------------------------------------------- */
+
+// const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const Token = require("../models/tokenModel");
+const passwordEncrypt = require("../helpers/passwordEncrypt");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   login: async (req, res) => {
     const { email, password } = req.body;
 
-    // 1) Check if email and password exist
-    if (!email || !password) {
-      return res
-        .status(400)
-        .send({ error: "Please provide an email and a password" });
+    if (email && password) {
+      const user = await User.findOne({ email, password });
+      if (user && user.isActive) {
+        //* User a ait token var mi kontrol et.
+        let tokenData = await Token.findOne({ userId: user._id });
+
+        //* Token yoksa actif user icin yeni bir token olustur.
+        if (!tokenData) {
+          const tokenKey = user._id + Date.now();
+          console.log(user._id + Date.now());
+
+          tokenData = await Token.create({ userId: user._id, token: tokenKey });
+        }
+      }
     }
-    // 2) Check if the user exist && password is correct
-    const user = await User.findOne({ email }).select("+password");
-    console.log(user);
-
-    // 3) If everything ok, send jwt to client
-
-    const token = "asd";
-    res.status(200).send({
-      error: false,
-      token,
-    });
   },
   logout: async (req, res) => {},
 };

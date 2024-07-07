@@ -8,7 +8,7 @@ const app = express();
 
 /* ------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
-/*                               CONFIGURATIONS                             */
+/*                               CONFIGURATIONS                               */
 /* -------------------------------------------------------------------------- */
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
@@ -36,10 +36,10 @@ app.all("/", (req, res) => {
   });
 });
 
-app.use("/auth", require("./src/routes/authRouter"));
-app.use("/rooms", require("./src/routes/roomRouter"));
-app.use("/users", require("./src/routes/userRouter"));
-app.use("/reservations", require("./src/routes/reservationRouter"));
+// console.log("668a947fda3efd683614df26" + Date.now());
+
+app.use(require("./src/routes/"));
+
 /* ------------------------------------------------------- */
 
 // errorHandler:
