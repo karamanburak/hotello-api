@@ -3,9 +3,12 @@
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 const router = require("express").Router();
-/* ------------------------------------------------------- */
 const room = require("../controllers/roomController");
 const idValidation = require("../middlewares/idValidation");
+const { isLogin } = require("../middlewares/permissions");
+/* ------------------------------------------------------- */
+
+router.use(isLogin);
 
 router.route("/").get(room.list).post(room.create);
 router

@@ -41,8 +41,22 @@ module.exports = {
     }
   },
   logout: async (req, res) => {
+    // 1. yöntem (Tüm otturumlari kapatir yani tüm tokenlari siler)
+    // const deleted = await Token.deleteOne({ userId: req.user._id });
     // console.log(req.user);
-    const deleted = await Token.deleteOne({ userId: req.user._id });
+
+    // 2. yöntem (Tüm otturumlari kapatir yani tüm tokenlari siler)
+    // const deleted = await Token.deleteMany({ userId: req.user._id });
+    // console.log(req.user);
+
+    //3. yöntem (Tek bir oturumu kapatir yani tek bir tokeni siler)
+    const auth = req.headers?.authorization || null;
+    const tokenKey = auth ? auth.split(" ") : null;
+
+    let deleted = null;
+    if (tokenKey && tokenKey[0] == "Token") {
+      deleted = await Token.deleteOne({ token: tokenKey[1] });
+    }
 
     res.status(deleted.deletedCount > 0 ? 200 : 404).send({
       error: !deleted.deletedCount,

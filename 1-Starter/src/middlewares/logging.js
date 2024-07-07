@@ -1,6 +1,6 @@
 "use strict";
 /* -------------------------------------------------------
-    NODEJS EXPRESS | CLARUSWAY FullStack Team
+    HOTEL API
 ------------------------------------------------------- */
 // $ npm i morgan
 // app.use(require('./src/middlewares/logging')):
