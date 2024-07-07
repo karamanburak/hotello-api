@@ -21,12 +21,23 @@ module.exports = {
 
         //* Token yoksa actif user icin yeni bir token olustur.
         if (!tokenData) {
-          const tokenKey = user._id + Date.now();
-          console.log(user._id + Date.now());
+          const tokenKey = passwordEncrypt(user._id + Date.now());
 
           tokenData = await Token.create({ userId: user._id, token: tokenKey });
         }
+
+        res.status(200).send({
+          error: false,
+          token: tokenData.token,
+          user,
+        });
+      } else {
+        res.errorStatusCode = 401;
+        throw new Error("Wrong Email or Password");
       }
+    } else {
+      res.errorStatusCode = 400;
+      throw new Error("Email or Password required!");
     }
   },
   logout: async (req, res) => {},

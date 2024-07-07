@@ -49,3 +49,5 @@ app.use(require("./src/middlewares/errorHandler"));
 app.listen(PORT, () => console.log(`App running on port ${PORT}`));
 
 /* ------------------------------------------------------- */
+
+// require("./src/helpers/sync")();

@@ -10,8 +10,8 @@ module.exports = {
     res.status(200).send({
       error: false,
       detail: await res.getModelListDetails(Token),
-      results: rooms.length,
-      rooms,
+      results: tokens.length,
+      tokens,
     });
   },
   create: async (req, res) => {
