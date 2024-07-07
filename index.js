@@ -4,16 +4,17 @@
 ------------------------------------------------------- */
 
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
 /* ------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/*                               CONFIGURATIONS                               */
-/* -------------------------------------------------------------------------- */
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
 
 require("express-async-errors");
+/* -------------------------------------------------------------------------- */
+/*                               CONFIGURATIONS                               */
+/* -------------------------------------------------------------------------- */
 
 const { dbConnection } = require("./src/configs/dbConnection");
 dbConnection();
@@ -26,6 +27,9 @@ app.use(express.json());
 app.use(require("./src/middlewares/findSearchSortPagi"));
 
 app.use(require("./src/middlewares/authentication"));
+
+app.use(require("./src/middlewares/logging"));
+app.use(morgan("dev"));
 
 /* -------------------------------------------------------------------------- */
 /*                               ROUTES                                       */
@@ -48,7 +52,7 @@ app.use(require("./src/routes/"));
 app.use(require("./src/middlewares/errorHandler"));
 
 // RUN SERVER:
-app.listen(PORT, () => console.log(`App running on port ${PORT}`));
+app.listen(PORT, () => console.log(`App running on http://127.0.0.1:${PORT}`));
 
 /* ------------------------------------------------------- */
 

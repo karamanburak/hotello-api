@@ -7,18 +7,31 @@ const express = require("express");
 const app = express();
 
 /* ------------------------------------------------------- */
+require("dotenv").config();
+const PORT = process.env.PORT || 8000;
+
+require("express-async-errors");
 /* -------------------------------------------------------------------------- */
 /*                               CONFIGURATIONS                               */
 /* -------------------------------------------------------------------------- */
+
+const { dbConnection } = require("./src/configs/dbConnection");
+dbConnection();
 /* -------------------------------------------------------------------------- */
 /*                               MIDDLEWARES                                  */
 /* -------------------------------------------------------------------------- */
+app.use(express.json());
+
+app.use(require("./src/middlewares/findSearchSortPagi"));
 /* -------------------------------------------------------------------------- */
 /*                               ROUTES                                       */
 /* -------------------------------------------------------------------------- */
 
 app.all("/", (req, res) => {
-  res.send("<h1>Welcome to the Hotel API</h1>");
+  res.send({
+    message: "<h1>Welcome to the Hotel API</h1>",
+    user: req.user,
+  });
 });
 
 /* ------------------------------------------------------- */
@@ -30,3 +43,5 @@ app.use(require("./src/middlewares/errorHandler"));
 app.listen(PORT, () => console.log(`App running on port ${PORT}`));
 
 /* ------------------------------------------------------- */
+
+// require("./src/helpers/sync")();
