@@ -101,7 +101,7 @@
 6. Rezervasyon İptal Etme
 
 - [ ] Bir kullanıcı, belirli bir rezervasyonu iptal eder.
-- [ ] Rezervasyon ID'si gereklidir
+      Not: Rezervasyon ID'si gereklidir
 
 ```json
 {
@@ -114,8 +114,8 @@
 
 7. Oda Bilgilerini Güncelleme
 
-- [ ] Admin yetkisine sahip bir kullanıcı, var olan bir odanın bilgilerini günceller (fiyat, yatak türü vb.).
-- [ ] Oda ID'si gereklidir.
+- [ ] Admin yetkisine sahip bir kullanıcı, var olan bir odanın bilgilerini günceller (fiyat, yatak türü vb.).  
+       Not: Oda ID'si gereklidir.
 
 ```json
 {
