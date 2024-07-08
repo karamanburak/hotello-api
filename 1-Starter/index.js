@@ -34,6 +34,15 @@ app.all("/", (req, res) => {
   });
 });
 
+app.use("/", require("./src/routes/"));
+
+app.use((req, res, next) => {
+  res.status(404).send({
+    error: true,
+    message: "Route not found!",
+  });
+});
+
 /* ------------------------------------------------------- */
 
 // errorHandler:

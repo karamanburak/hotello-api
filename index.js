@@ -50,7 +50,14 @@ app.all("/", (req, res) => {
 
 // console.log("668a947fda3efd683614df26" + Date.now());
 
-app.use(require("./src/routes/"));
+app.use("/", require("./src/routes/"));
+
+app.use((req, res, next) => {
+  res.status(404).send({
+    error: true,
+    message: "Route not found!",
+  });
+});
 
 /* ------------------------------------------------------- */
 
