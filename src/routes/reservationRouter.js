@@ -4,10 +4,14 @@
 ------------------------------------------------------- */
 const router = require("express").Router();
 const reservation = require("../controllers/reservationController");
+const permissions = require("../middlewares/permissions");
 
 /* ------------------------------------------------------- */
 
-router.route("/").get(reservation.list).post(reservation.create);
+router
+  .route("/")
+  .get(permissions.isAdmin, reservation.list)
+  .post(reservation.create);
 router
   .route("/:id")
   .get(reservation.read)

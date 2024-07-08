@@ -1,7 +1,7 @@
 module.exports = (req, res, next) => {
   //! Filtering
   const filter = req.query?.filter || {};
-  console.log("filter: ", filter);
+  // console.log("filter: ", filter);
 
   //* Searching => gelen ifaade içerisinde geçiyor mu geçmiyor mu
   const search = req.query?.search || {};
