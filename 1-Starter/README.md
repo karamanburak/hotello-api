@@ -34,11 +34,23 @@
 
 ```json
 {
-    "task": "Kullanıcı Girişi",
-    "data": {
-        "username": "john_doe", or "email": "john_doe@gmail.com",
-        "password": "Password123!"
-    }
+  "task": "Kullanıcı Girişi",
+  "data": {
+    "username": "john_doe",
+    "password": "Password123!"
+  }
+}
+```
+
+or
+
+```json
+{
+  "task": "Kullanıcı Girişi",
+  "data": {
+    "email": "john_doe@gmail.com",
+    "password": "Password123!"
+  }
 }
 ```
 
