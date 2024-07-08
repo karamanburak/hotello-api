@@ -64,6 +64,10 @@ module.exports = {
     });
   },
   delete: async (req, res) => {
+    /*
+            #swagger.tags = ["Tokens"]
+            #swagger.summary = "Delete Token"
+        */
     const token = await Token.deleteOne({ _id: req.params.id });
     res.status(token.deletedCount > 0 ? 204 : 404).send({
       error: !token.deletedCount,

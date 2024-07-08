@@ -7,7 +7,7 @@ const Reservation = require("../models/reservationModel");
 module.exports = {
   list: async (req, res) => {
     /*
-            #swagger.tags = ["Orders"]
+            #swagger.tags = ["Reservations"]
             #swagger.summary = "List Orders"
             #swagger.description = `
                 You can send query with endpoint for filter[], search[], sort[], page and limit.

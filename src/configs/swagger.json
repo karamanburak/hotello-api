@@ -3,7 +3,7 @@
   "info": {
     "version": "1.0.0",
     "title": "REST API",
-    "description": "",
+    "description": "Hotel API",
     "contact": {
       "name": "",
       "email": "karaman.buraak@gmail.com"
@@ -263,6 +263,10 @@
         }
       },
       "delete": {
+        "tags": [
+          "Tokens"
+        ],
+        "summary": "Delete Token",
         "description": "",
         "parameters": [
           {
@@ -416,7 +420,7 @@
     "/reservations/": {
       "get": {
         "tags": [
-          "Orders"
+          "Reservations"
         ],
         "summary": "List Orders",
         "description": "\r  You can send query with endpoint for filter[], search[], sort[], page and limit.\r  <ul> Examples:\r   <li>URL/?<b>filter[field1]=value1&filter[field2]=value2</b></li>\r   <li>URL/?<b>search[field1]=value1&search[field2]=value2</b></li>\r   <li>URL/?<b>sort[field1]=1&sort[field2]=-1</b></li>\r   <li>URL/?<b>page=2&limit=1</b></li>\r  </ul>\r  ",

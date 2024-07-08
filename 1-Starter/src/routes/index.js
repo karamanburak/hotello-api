@@ -14,6 +14,8 @@ router.use("/tokens", require("./tokenRouter"));
 router.use("/rooms", require("./roomRouter"));
 // reservation:
 router.use("/reservations", require("./reservationRouter"));
+// document:
+// router.use("/documents", require("./documents"));
 
 /*------------------------------------------------------- */
 module.exports = router;
