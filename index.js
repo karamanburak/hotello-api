@@ -37,7 +37,13 @@ app.use(morgan("dev"));
 
 app.all("/", (req, res) => {
   res.send({
-    message: "<h1>Welcome to the Hotel API</h1>",
+    error: false,
+    message: "Welcome to HOTEL API",
+    docs: {
+      swagger: "/documents/swagger",
+      redoc: "/documents/redoc",
+      json: "/documents/json",
+    },
     user: req.user,
   });
 });

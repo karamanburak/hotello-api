@@ -5,7 +5,7 @@ EXPRESS - HOTEL API
 const router = require("express").Router();
 
 // auth:
-router.use("/auth", require(".//authRouter"));
+router.use("/auth", require("./authRouter"));
 // user:
 router.use("/users", require("./userRouter"));
 // token:

@@ -11,6 +11,19 @@ const jwt = require("jsonwebtoken");
 
 module.exports = {
   login: async (req, res) => {
+    /*
+            #swagger.tags = ["Authentication"]
+            #swagger.summary = "Login"
+            #swagger.description = 'Login with email and password for get simpleToken and JWT'
+            #swagger.parameters["body"] = {
+                in: "body",
+                required: true,
+                schema: {
+                    "username": "test",
+                    "password": "aA?123456",
+                }
+            }
+        */
     const { email, password } = req.body;
 
     if (email && password) {
@@ -41,6 +54,11 @@ module.exports = {
     }
   },
   logout: async (req, res) => {
+    /*
+            #swagger.tags = ["Authentication"]
+            #swagger.summary = "simpleToken: Logout"
+            #swagger.description = 'Delete token key.'
+        */
     // 1. yöntem (Tüm otturumlari kapatir yani tüm tokenlari siler)
     // const deleted = await Token.deleteOne({ userId: req.user._id });
     // console.log(req.user);
