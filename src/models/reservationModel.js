@@ -41,12 +41,15 @@ const ResevationSchema = new mongoose.Schema(
     },
     totalPrice: {
       type: Number,
-      required: true,
+      get: function () {
+        return this.night * this.price;
+      },
     },
   },
   {
     collection: "reservations",
     timestamps: true,
+    toJSON: { getters: true },
   }
 );
 

@@ -60,7 +60,7 @@ module.exports = {
             #swagger.summary = "simpleToken: Logout"
             #swagger.description = 'Delete token key.'
         */
-    // 1. yöntem (Tüm otturumlari kapatir yani tüm tokenlari siler)
+    //* 1. yöntem (Tüm oturumlari kapatir yani tüm tokenlari siler not: userId bizim kurgumuzda unique oldugu icin!!!)
     // const deleted = await Token.deleteOne({ userId: req.user._id });
 
     // res.status(deleted.deletedCount > 0 ? 200 : 404).send({
@@ -70,11 +70,11 @@ module.exports = {
     // });
     // console.log(req.user);
 
-    // 2. yöntem (Tüm otturumlari kapatir yani tüm tokenlari siler)
+    //* 2. yöntem (Tüm oturumlari kapatir yani tüm tokenlari siler)
     // const deleted = await Token.deleteMany({ userId: req.user._id });
     // console.log(req.user);
 
-    //3. yöntem (Tek bir oturumu kapatir yani tek bir tokeni siler)
+    //* 3. yöntem (Tek bir oturumu kapatir yani tek bir tokeni siler)
     const auth = req.headers?.authorization || null;
     const tokenKey = auth ? auth.split(" ") : null;
 
