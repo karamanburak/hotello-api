@@ -23,7 +23,7 @@ const ResevationSchema = new mongoose.Schema(
       trim: true,
     },
     departureDate: {
-      type: String,
+      type: Date,
       required: true,
       trim: true,
     },

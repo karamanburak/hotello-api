@@ -51,12 +51,12 @@ module.exports = async function () {
   const users = [
     {
       username: "user1",
-      password: "password1",
+      password: "Password1!",
       email: "user1@example.com",
     },
     {
       username: "user2",
-      password: "password2",
+      password: "Password2!",
       email: "user2@example.com",
     },
   ];
@@ -73,8 +73,8 @@ module.exports = async function () {
   // Örnek rezervasyonlar oluştur
   const reservations = [
     {
-      userId: (await User.findOne({ username: "user1" }))._id,
-      roomId: (await Room.findOne({ roomNumber: 101 }))._id,
+      userId: await User.findOne({ username: "user1" }),
+      roomId: await Room.findOne({ roomNumber: 101 }),
       arrivalDate: new Date("2023-07-15"),
       departureDate: new Date("2023-07-20"),
       guestNumber: 2,
@@ -83,8 +83,8 @@ module.exports = async function () {
       totalPrice: 500,
     },
     {
-      userId: (await User.findOne({ username: "user2" }))._id,
-      roomId: (await Room.findOne({ roomNumber: 102 }))._id,
+      userId: await User.findOne({ username: "user2" }),
+      roomId: await Room.findOne({ roomNumber: 102 }),
       arrivalDate: new Date("2023-08-01"),
       departureDate: new Date("2023-08-05"),
       guestNumber: 3,
