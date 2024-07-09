@@ -11,24 +11,36 @@ const jwt = require("jsonwebtoken");
 
 /* -------------------------------------------------------------------------- */
 module.exports = async (req, res, next) => {
-  const auth = req.headers?.authorization || null;
+  const auth = req.headers?.authorization;
   const tokenKey = auth ? auth.split(" ") : null;
 
-  if (tokenKey) {
-    if (tokenKey[0] == "Token") {
-      // SimpleToken:
-      const tokenData = await Token.findOne({ token: tokenKey[1] }).populate(
-        "userId"
-      );
-      // console.log(tokenData);
+  // SimpleToken: \\
+  // if (tokenKey && tokenKey[0] == "Token") {
+  //   const tokenData = await Token.findOne({ token: tokenKey[1] }).populate(
+  //     "userId"
+  //   );
+  //   req.user = tokenData ? tokenData.userId : False;
+  //   // console.log(tokenData);
+  // }
+  // SimpleToken: \\
 
-      req.user = tokenData ? tokenData.userId : undefined;
-    } else if (tokenKey[0] == "Bearer") {
-      // JWT
-      jwt.verify(tokenKey[1], process.env.JWT_SECRET, (error, data) => {
-        req.user = data;
-      });
-    }
+  // JWT TOKEN \\
+  if (tokenKey[0] == "Bearer") {
+    //* JWT access token:
+    jwt.verify(
+      tokenKey[1],
+      process.env.ACCESS_KEY,
+      function (error, accessData) {
+        if (accessData) {
+          console.log("JWT verified");
+          req.user = accessData;
+        } else {
+          console.log("JWT not verified!");
+          req.user = false;
+          console.log(error);
+        }
+      }
+    );
   }
 
   next();

@@ -8,15 +8,16 @@ const idValidation = require("../middlewares/idValidation");
 const permissions = require("../middlewares/permissions");
 /* ------------------------------------------------------- */
 
-router.use(permissions.isLogin);
-
-router.route("/").get(room.list).post(permissions.isAdmin, room.create);
+router
+  .route("/")
+  .get(permissions.isAdmin, room.list)
+  .post(permissions.isAdmin, room.create);
 router
   .route("/:id")
   .all(idValidation)
   .get(room.read)
-  .put(permissions.isAdmin, room.update)
-  .patch(permissions.isAdmin, room.update)
+  .put(room.update)
+  .patch(room.update)
   .delete(room.delete);
 
 /* ------------------------------------------------------- */

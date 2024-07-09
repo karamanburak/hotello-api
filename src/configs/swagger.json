@@ -39,7 +39,7 @@
           "Authentication"
         ],
         "summary": "Login",
-        "description": "Login with email and password for get simpleToken and JWT",
+        "description": "Login with email and password for get JWT",
         "parameters": [
           {
             "name": "body",
@@ -72,8 +72,8 @@
         "tags": [
           "Authentication"
         ],
-        "summary": "simpleToken: Logout",
-        "description": "Delete token key.",
+        "summary": "JWT: Refresh",
+        "description": "Refresh token.",
         "responses": {
           "200": {
             "description": "OK"
