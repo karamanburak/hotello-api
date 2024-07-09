@@ -54,7 +54,26 @@ or
 }
 ```
 
-3. Oda Oluşturma
+3. Kullanıcı Bilgilerini Güncelleme
+
+- [ ] Bir kullanıcı, kendi bilgilerini günceller (e-posta adresi veya şifre).
+- [ ] Yeni şifre belirtilen kurallara uygun olmalıdır.
+- [ ] E-posta adresi geçerli bir formatta olmalıdır.
+
+```json
+{
+  "task": "Kullanıcı Bilgilerini Güncelleme",
+  "data": {
+    "userId": "60b6a9f1e1d1b24bfc13e0a8",
+    "email": "new_email@example.com",
+    "password": "NewPassword123!"
+  }
+}
+```
+
+## Oda Modeli (Room)
+
+4. Oda Oluşturma
 
 - [ ] Admin yetkisine sahip bir kullanıcı, sisteme yeni bir oda ekler.
 - [ ] Oda numarası, yatak türü ve fiyat bilgileri gereklidir.
@@ -72,7 +91,25 @@ or
 }
 ```
 
-4. Rezervasyon Oluşturma
+5. Oda Bilgilerini Güncelleme
+
+- [ ] Admin yetkisine sahip bir kullanıcı, var olan bir odanın bilgilerini günceller (fiyat, yatak türü vb.).
+      Not: Oda ID'si gereklidir.
+
+```json
+{
+  "task": "Oda Bilgilerini Güncelleme",
+  "data": {
+    "roomId": "60b6a9f1e1d1b24bfc13e0a9",
+    "bedType": "Medium Bed",
+    "price": "120"
+  }
+}
+```
+
+## Rezervasyon Modeli (Reservation)
+
+6. Rezervasyon Oluşturma
 
 - [ ] Bir kullanıcı, belirli bir tarihler arasında bir oda için rezervasyon yapar.
 - [ ] Kullanıcı ID'si, oda ID'si, varış ve ayrılış tarihleri, misafir sayısı ve gece sayısı bilgileri gereklidir.
@@ -93,24 +130,7 @@ or
 }
 ```
 
-5. Kullanıcı Bilgilerini Güncelleme
-
-- [ ] Bir kullanıcı, kendi bilgilerini günceller (e-posta adresi veya şifre).
-- [ ] Yeni şifre belirtilen kurallara uygun olmalıdır.
-- [ ] E-posta adresi geçerli bir formatta olmalıdır.
-
-```json
-{
-  "task": "Kullanıcı Bilgilerini Güncelleme",
-  "data": {
-    "userId": "60b6a9f1e1d1b24bfc13e0a8",
-    "email": "new_email@example.com",
-    "password": "NewPassword123!"
-  }
-}
-```
-
-6. Rezervasyon İptal Etme
+7. Rezervasyon İptal Etme
 
 - [ ] Bir kullanıcı, belirli bir rezervasyonu iptal eder.
       Not: Rezervasyon ID'si gereklidir
@@ -120,22 +140,6 @@ or
   "task": "Rezervasyon İptal Etme",
   "data": {
     "reservationId": "60b6a9f1e1d1b24bfc13e0aa"
-  }
-}
-```
-
-7. Oda Bilgilerini Güncelleme
-
-- [ ] Admin yetkisine sahip bir kullanıcı, var olan bir odanın bilgilerini günceller (fiyat, yatak türü vb.).
-      Not: Oda ID'si gereklidir.
-
-```json
-{
-  "task": "Oda Bilgilerini Güncelleme",
-  "data": {
-    "roomId": "60b6a9f1e1d1b24bfc13e0a9",
-    "bedType": "Medium Bed",
-    "price": "120"
   }
 }
 ```

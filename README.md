@@ -54,7 +54,26 @@ or
 }
 ```
 
-3.  Create Room:
+3. Update User Information:
+
+- [ ] A user can update their own information (email address or password).
+- [ ] The new password must comply with the specified rules.
+- [ ] The email address must be in a valid format.
+
+```json
+{
+  "task": "Update User Information",
+  "data": {
+    "userId": "60b6a9f1e1d1b24bfc13e0a8",
+    "email": "new_email@example.com",
+    "password": "NewPassword123!"
+  }
+}
+```
+
+## Room Model
+
+4.  Create Room:
 
 - [ ] A user with admin privileges can add a new room to the system.
 - [ ] A room number, bed type, and price are required.
@@ -72,7 +91,25 @@ or
 }
 ```
 
-4. Create Reservation:
+5. Update Room Information:
+
+- [ ] A user with admin privileges can update the information of an existing room (price, bed type, etc.).
+      Note: The room ID is required.
+
+```json
+{
+  "task": "Update Room Information",
+  "data": {
+    "roomId": "60b6a9f1e1d1b24bfc13e0a9",
+    "bedType": "Medium Bed",
+    "price": "120"
+  }
+}
+```
+
+## Reservation Model
+
+6. Create Reservation:
 
 - [ ] A user can make a reservation for a room for specific dates.
 - [ ] User ID, room ID, arrival and departure dates, guest number, and number of nights are required.
@@ -93,24 +130,7 @@ or
 }
 ```
 
-5. Update User Information:
-
-- [ ] A user can update their own information (email address or password).
-- [ ] The new password must comply with the specified rules.
-- [ ] The email address must be in a valid format.
-
-```json
-{
-  "task": "Update User Information",
-  "data": {
-    "userId": "60b6a9f1e1d1b24bfc13e0a8",
-    "email": "new_email@example.com",
-    "password": "NewPassword123!"
-  }
-}
-```
-
-6. Cancel Reservation:
+7. Cancel Reservation:
 
 - [ ] A user can cancel a specific reservation.
       Note: The reservation ID is required.
@@ -120,22 +140,6 @@ or
   "task": "Cancel Reservation",
   "data": {
     "reservationId": "60b6a9f1e1d1b24bfc13e0aa"
-  }
-}
-```
-
-7. Update Room Information:
-
-- [ ] A user with admin privileges can update the information of an existing room (price, bed type, etc.).
-      Note: The room ID is required.
-
-```json
-{
-  "task": "Update Room Information",
-  "data": {
-    "roomId": "60b6a9f1e1d1b24bfc13e0a9",
-    "bedType": "Medium Bed",
-    "price": "120"
   }
 }
 ```
