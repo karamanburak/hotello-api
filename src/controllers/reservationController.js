@@ -19,7 +19,11 @@ module.exports = {
                 </ul>
             `
         */
-    const reservations = await res.getModelList(Reservation);
+    let customFilter = {};
+    if (!req.user.isAdmin) {
+      customFilter = { userId: req.user._id };
+    }
+    const reservations = await res.getModelList(Reservation, customFilter);
     res.status(200).send({
       error: false,
       details: await res.getModelListDetails(Reservation),
@@ -32,6 +36,7 @@ module.exports = {
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Create Reservation"
         */
+
     const newReservation = await Reservation.create(req.body);
     res.status(201).send({
       error: false,

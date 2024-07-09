@@ -20,19 +20,25 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
-      minLength: 8,
-      set: (password) => {
-        if (
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!-\*?+&%{}])[A-Za-z\d!-\*?+&%{}]{8,}$/.test(
-            password
-          )
-        ) {
+      //   set: (password) => {
+      //     if (
+      //       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!-\*?+&%{}])[A-Za-z\d!-\*?+&%{}]{8,}$/.test(
+      //         password
+      //       )
+      //     ) {
+      //       return passwordEncrypt(password);
+      //     } else {
+      //       throw new CustomError("Password type is incorrect", 400);
+      //     }
+      //   },
+      // },
+      set: function (password) {
+        if (validator.isStrongPassword(password)) {
           return passwordEncrypt(password);
         } else {
           throw new CustomError("Password type is incorrect", 400);
         }
       },
-      // select: false,
     },
     email: {
       type: String,

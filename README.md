@@ -166,6 +166,9 @@ or
 }
 ```
 
-## Postman Documentation
+## Documentations
 
 [View Postman Documentation]()
+[View Swagger Documentation]()
+[View Redoc Documentation]()
+[View Json Documentation]()
