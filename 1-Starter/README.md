@@ -4,7 +4,7 @@
 
 ![ERD](./erdHotelApi.png)
 
-# Otel Rezervasyon Sistemi Görev Senaryosu
+# Otel Rezervasyon Sistemi Görevleri
 
 ## Kullanıcı Modeli (User)
 

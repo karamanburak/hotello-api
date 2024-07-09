@@ -4,7 +4,7 @@
 
 ![ERD](./erdHotelApi.png)
 
-# Hotel Reservation System Task Scenarios
+# Hotel Reservation System Tasks
 
 ## User Model
 
@@ -161,3 +161,7 @@ or
   "task": "List Reservations"
 }
 ```
+
+## Postman Documentation
+
+[View Postman Documentation]()
