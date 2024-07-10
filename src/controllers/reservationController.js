@@ -26,7 +26,7 @@ module.exports = {
     const reservations = await res.getModelList(Reservation, customFilter);
     res.status(200).send({
       error: false,
-      details: await res.getModelListDetails(Reservation),
+      details: await res.getModelListDetails,
       results: reservations.length,
       reservations,
     });

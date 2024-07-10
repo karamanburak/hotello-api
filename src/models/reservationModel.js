@@ -16,6 +16,7 @@ const ReservationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Room",
       required: true,
+      unique: true,
     },
     arrivalDate: {
       type: Date,
@@ -33,7 +34,7 @@ const ReservationSchema = new mongoose.Schema(
     },
     night: {
       type: Number,
-      required: true,
+      // required: true,
     },
     price: {
       type: Number,
@@ -53,7 +54,12 @@ const ReservationSchema = new mongoose.Schema(
   }
 );
 ReservationSchema.pre("save", function (next) {
-  this.totalPrice = this.price * this.night;
+  const oneDay = 24 * 60 * 60 * 1000;
+  this.night = Math.round(this.departureDate - this.arrivalDate) / oneDay;
+  next();
+});
+ReservationSchema.pre("save", function (next) {
+  this.totalPrice = this.night * this.price;
   next();
 });
 ReservationSchema.pre("updateOne", async function (next) {
