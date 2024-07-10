@@ -55,7 +55,26 @@ const ReservationSchema = new mongoose.Schema(
 );
 ReservationSchema.pre("save", function (next) {
   const oneDay = 24 * 60 * 60 * 1000;
-  this.night = Math.round(this.departureDate - this.arrivalDate) / oneDay;
+
+  // Normalize and trim dates, set them to UTC start of the day
+  this.arrivalDate = new Date(
+    Date.UTC(
+      this.arrivalDate.getFullYear(),
+      this.arrivalDate.getMonth(),
+      this.arrivalDate.getDate()
+    )
+  );
+  this.departureDate = new Date(
+    Date.UTC(
+      this.departureDate.getFullYear(),
+      this.departureDate.getMonth(),
+      this.departureDate.getDate()
+    )
+  );
+
+  // Calculate the number of nights
+  this.night = Math.round((this.departureDate - this.arrivalDate) / oneDay);
+
   next();
 });
 ReservationSchema.pre("save", function (next) {
