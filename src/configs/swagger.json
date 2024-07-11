@@ -72,8 +72,8 @@
         "tags": [
           "Authentication"
         ],
-        "summary": "simpleToken: Logout",
-        "description": "Delete token key.",
+        "summary": "Refresh token",
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"

@@ -98,8 +98,7 @@ module.exports = {
   refresh: async (req, res) => {
     /*
             #swagger.tags = ["Authentication"]
-            #swagger.summary = "simpleToken: Logout"
-            #swagger.description = 'Delete token key.'
+            #swagger.summary = "Refresh token"
         */
 
     const refreshToken = req.body?.bearer.refresh;
