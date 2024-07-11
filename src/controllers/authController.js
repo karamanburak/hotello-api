@@ -129,8 +129,8 @@ module.exports = {
   logout: async (req, res) => {
     /*
             #swagger.tags = ["Authentication"]
-            #swagger.summary = "JWT: Refresh"
-            #swagger.description = 'Refresh token.'
+            #swagger.summary = "JWT: Logout"
+            #swagger.description = 'Delete token key.'
         */
     //* 1. yöntem (Tüm oturumlari kapatir yani tüm tokenlari siler not: userId bizim kurgumuzda unique oldugu icin!!!)
     // const deleted = await Token.deleteOne({ userId: req.user._id });
@@ -147,18 +147,22 @@ module.exports = {
     // console.log(req.user);
 
     //* 3. yöntem (Tek bir oturumu kapatir yani tek bir tokeni siler)
-    const auth = req.headers?.authorization || null;
+    const auth = req.headers?.authorization;
     const tokenKey = auth ? auth.split(" ") : null;
 
     let deleted = null;
-    if (tokenKey && tokenKey[0] == "Bearer") {
+    if (tokenKey && tokenKey[0] == "Token") {
       deleted = await Token.deleteOne({ token: tokenKey[1] });
+      res.status(deleted?.deletedCount > 0 ? 200 : 400).send({
+        error: !deleted?.deletedCount,
+        deleted,
+        message: deleted?.deletedCount > 0 ? "Logout Ok" : "Logout Failed",
+      });
+    } else {
+      res.send({
+        error: false,
+        message: "Logout Ok!",
+      });
     }
-
-    res.status(deleted.deletedCount > 0 ? 200 : 404).send({
-      error: !deleted.deletedCount,
-      deleted,
-      message: deleted.deletedCount > 0 ? "Logout OK" : "Logout Failed!",
-    });
   },
 };

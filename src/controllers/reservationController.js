@@ -23,7 +23,10 @@ module.exports = {
     if (!req.user.isAdmin) {
       customFilter = { userId: req.user._id };
     }
-    const reservations = await res.getModelList(Reservation, customFilter);
+    const reservations = await res.getModelList(Reservation, customFilter, [
+      "userId",
+      "roomId",
+    ]);
     res.status(200).send({
       error: false,
       details: await res.getModelListDetails,
