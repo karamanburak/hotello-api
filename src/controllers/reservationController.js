@@ -38,6 +38,18 @@ module.exports = {
     /*
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Create Reservation"
+               #swagger.parameters["body"] = {
+      in: "body",
+      required : true,
+      schema:{
+    "userId":"668fd96247f6e64488d96335",
+    "roomId":"668fda202926db85c1068371",
+    "arrivalDate": "2024-07-11   ",
+    "departureDate":"    2024-07-15",
+    "guestNumber":2,
+    "price":50
+        }
+  }
         */
 
     const newReservation = await Reservation.create(req.body);
@@ -61,6 +73,16 @@ module.exports = {
     /*
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Update Reservation"
+                             #swagger.parameters["body"] = {
+      in: "body",
+      required : true,
+      schema:{
+    "arrivalDate": "2024.07.15",
+    "departureDate": "2024.07.20",
+    "guestNumber": 2,
+    "price":49
+        }
+  }
         */
     const reservation = await Reservation.updateOne(
       { _id: req.params.id },

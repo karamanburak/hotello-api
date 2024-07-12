@@ -32,6 +32,15 @@ module.exports = {
     /*
             #swagger.tags = ["Users"]
             #swagger.summary = "Create User"
+                             #swagger.parameters["body"] = {
+      in: "body",
+      required : true,
+      schema:{
+    "username": "user",
+    "password": "Password1!",
+    "email": "user@example.com",
+        }
+  }
         */
     const newUser = await User.create(req.body);
     res.status(201).send({
@@ -54,6 +63,14 @@ module.exports = {
     /*
             #swagger.tags = ["Users"]
             #swagger.summary = "Update User"
+                             #swagger.parameters["body"] = {
+      in: "body",
+      required : true,
+      schema:{
+    "email":"admin@example.com",
+    "isAdmin":"true"
+        }
+  }
         */
     const user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
       runValidators: true,

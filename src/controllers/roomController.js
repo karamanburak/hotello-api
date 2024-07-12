@@ -31,6 +31,15 @@ module.exports = {
     /*
             #swagger.tags = ["Rooms"]
             #swagger.summary = "Create Room"
+                             #swagger.parameters["body"] = {
+      in: "body",
+      required : true,
+      schema:{
+ "roomNumber": 102,
+    "bedType": "Small Bed",
+    "price":99
+        }
+  }
         */
     const newRoom = await Room.create(req.body);
     res.status(201).send({
@@ -54,6 +63,15 @@ module.exports = {
     /*
             #swagger.tags = ["Rooms"]
             #swagger.summary = "Update Room"
+                             #swagger.parameters["body"] = {
+      in: "body",
+      required : true,
+      schema:{
+    "roomNumber": 102,
+    "bedType": "Medium Bed",
+    "price": 129
+        }
+  }
         */
     const room = await Room.updateOne({ _id: req.params.id }, req.body, {
       runValidators: true,

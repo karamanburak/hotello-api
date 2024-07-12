@@ -117,6 +117,30 @@
         ],
         "summary": "Create User",
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "example": "user"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Password1!"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "user@example.com"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -157,6 +181,24 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "admin@example.com"
+                },
+                "isAdmin": {
+                  "type": "string",
+                  "example": "true"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -200,6 +242,24 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "admin@example.com"
+                },
+                "isAdmin": {
+                  "type": "string",
+                  "example": "true"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -228,6 +288,30 @@
         ],
         "summary": "Create Room",
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "roomNumber": {
+                  "type": "number",
+                  "example": 102
+                },
+                "bedType": {
+                  "type": "string",
+                  "example": "Small Bed"
+                },
+                "price": {
+                  "type": "number",
+                  "example": 99
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -268,6 +352,28 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "roomNumber": {
+                  "type": "number",
+                  "example": 102
+                },
+                "bedType": {
+                  "type": "string",
+                  "example": "Medium Bed"
+                },
+                "price": {
+                  "type": "number",
+                  "example": 129
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -311,6 +417,28 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "roomNumber": {
+                  "type": "number",
+                  "example": 102
+                },
+                "bedType": {
+                  "type": "string",
+                  "example": "Medium Bed"
+                },
+                "price": {
+                  "type": "number",
+                  "example": 129
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -339,6 +467,42 @@
         ],
         "summary": "Create Reservation",
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "example": "668fd96247f6e64488d96335"
+                },
+                "roomId": {
+                  "type": "string",
+                  "example": "668fda202926db85c1068371"
+                },
+                "arrivalDate": {
+                  "type": "string",
+                  "example": "2024-07-11 "
+                },
+                "departureDate": {
+                  "type": "string",
+                  "example": " 2024-07-15"
+                },
+                "guestNumber": {
+                  "type": "number",
+                  "example": 2
+                },
+                "price": {
+                  "type": "number",
+                  "example": 50
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -379,6 +543,32 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "arrivalDate": {
+                  "type": "string",
+                  "example": "2024.07.15"
+                },
+                "departureDate": {
+                  "type": "string",
+                  "example": "2024.07.20"
+                },
+                "guestNumber": {
+                  "type": "number",
+                  "example": 2
+                },
+                "price": {
+                  "type": "number",
+                  "example": 49
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -422,6 +612,32 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "arrivalDate": {
+                  "type": "string",
+                  "example": "2024.07.15"
+                },
+                "departureDate": {
+                  "type": "string",
+                  "example": "2024.07.20"
+                },
+                "guestNumber": {
+                  "type": "number",
+                  "example": 2
+                },
+                "price": {
+                  "type": "number",
+                  "example": 49
+                }
+              }
+            }
           }
         ],
         "responses": {
