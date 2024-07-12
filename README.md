@@ -171,6 +171,6 @@ or
 ## Documentations
 
 - [View Postman Documentation](https://documenter.getpostman.com/view/32987022/2sA3e48oQX)
-- [View Swagger Documentation]()
-- [View Redoc Documentation]()
-- [View Json Documentation]()
+- [View Swagger Documentation](https://hotel-api-16lp.onrender.com/documents/swagger/)
+- [View Redoc Documentation](https://hotel-api-16lp.onrender.com/documents/redoc)
+- [View Json Documentation](https://hotel-api-16lp.onrender.com/documents/json)
