@@ -12,7 +12,7 @@
       "name": "ISC"
     }
   },
-  "host": "127.0.0.1:8000",
+  "host": "hotel-api-16lp.onrender.com/",
   "basePath": "/",
   "schemes": [
     "http",
