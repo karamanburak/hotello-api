@@ -1,4 +1,5 @@
 # HotelAPI
+
 This document provides a comprehensive guide to the tasks and models required for a hotel reservation system. The system encompasses functionalities for user management, room management, and reservation management, ensuring a smooth and efficient process for both administrators and users.
 
 ### ERD:
@@ -169,7 +170,7 @@ or
 
 ## Documentations
 
-[View Postman Documentation]()
-[View Swagger Documentation]()
-[View Redoc Documentation]()
-[View Json Documentation]()
+- [View Postman Documentation](https://documenter.getpostman.com/view/32987022/2sA3e48oQX)
+- [View Swagger Documentation]()
+- [View Redoc Documentation]()
+- [View Json Documentation]()
