@@ -17,7 +17,6 @@ require("express-async-errors");
 /* -------------------------------------------------------------------------- */
 
 const { dbConnection } = require("./src/configs/dbConnection");
-dbConnection();
 
 /* -------------------------------------------------------------------------- */
 /*                               MIDDLEWARES                                  */
