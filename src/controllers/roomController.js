@@ -41,6 +41,17 @@ module.exports = {
         }
   }
         */
+    let images = [];
+    if (req.files) {
+      req.files.forEach((image) => images.push("/uploads" + image.filename));
+    }
+
+    req.body.images = req.body.images
+      ? Array.isArray(req.body.images)
+        ? [...req.body.images, ...images]
+        : [...req.body.images, ...images]
+      : images;
+
     const newRoom = await Room.create(req.body);
     res.status(201).send({
       error: false,

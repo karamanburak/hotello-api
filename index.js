@@ -17,6 +17,7 @@ require("express-async-errors");
 /* -------------------------------------------------------------------------- */
 
 const { dbConnection } = require("./src/configs/dbConnection");
+dbConnection();
 
 /* -------------------------------------------------------------------------- */
 /*                               MIDDLEWARES                                  */
@@ -46,6 +47,9 @@ app.all("/", (req, res) => {
     user: req.user,
   });
 });
+
+//* Static root
+app.use("/uploads", express.static("./uploads"));
 
 // console.log("668a947fda3efd683614df26" + Date.now());
 

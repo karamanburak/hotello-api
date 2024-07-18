@@ -75,8 +75,8 @@ module.exports = async function () {
     {
       userId: await User.findOne({ username: "user1" }),
       roomId: await Room.findOne({ roomNumber: 101 }),
-      arrivalDate: new Date("2023-07-15"),
-      departureDate: new Date("2023-07-20"),
+      arrivalDate: new Date("2024-08-11"),
+      departureDate: new Date("2024-08-15"),
       guestNumber: 2,
       night: 5,
       price: 100,
@@ -85,8 +85,8 @@ module.exports = async function () {
     {
       userId: await User.findOne({ username: "user2" }),
       roomId: await Room.findOne({ roomNumber: 102 }),
-      arrivalDate: new Date("2023-08-01"),
-      departureDate: new Date("2023-08-05"),
+      arrivalDate: new Date("2024-08-01"),
+      departureDate: new Date("2024-08-05"),
       guestNumber: 3,
       night: 4,
       price: 150,
