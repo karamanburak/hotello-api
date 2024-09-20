@@ -2,7 +2,7 @@
 /* -------------------------------------------------------
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
-const Token = require("../models/tokenModel");
+const Token = require("../models/token");
 
 module.exports = {
   list: async (req, res) => {

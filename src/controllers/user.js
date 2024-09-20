@@ -4,7 +4,7 @@ const sendMail = require("../helpers/sendMail");
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 
-const User = require("../models/userModel");
+const User = require("../models/user");
 
 module.exports = {
   list: async (req, res) => {

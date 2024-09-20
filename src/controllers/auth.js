@@ -4,8 +4,8 @@
 ------------------------------------------------------- */
 
 // const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
-const Token = require("../models/tokenModel");
+const User = require("../models/user");
+const Token = require("../models/token");
 const { CustomError } = require("../errors/customError");
 const passwordEncrypt = require("../helpers/passwordEncrypt");
 const jwt = require("jsonwebtoken");

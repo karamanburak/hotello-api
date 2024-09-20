@@ -6,7 +6,7 @@
 // app.use(authentication);
 
 /* -------------------------------------------------------------------------- */
-const Token = require("../models/tokenModel");
+const Token = require("../models/token");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 /* -------------------------------------------------------------------------- */

@@ -5,7 +5,7 @@ EXPRESS - HOTEL API
 
 const router = require("express").Router();
 
-const auth = require("../controllers/authController");
+const auth = require("../controllers/auth");
 
 //^ URL => "/auth"
 

@@ -3,7 +3,7 @@
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 const router = require("express").Router();
-const reservation = require("../controllers/reservationController");
+const reservation = require("../controllers/reservation");
 const permissions = require("../middlewares/permissions");
 const idValidation = require("../middlewares/idValidation");
 

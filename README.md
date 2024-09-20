@@ -1,10 +1,10 @@
-# HotelAPI
+# HotelloAPI
 
 This document provides a comprehensive guide to the tasks and models required for a hotel reservation system. The system encompasses functionalities for user management, room management, and reservation management, ensuring a smooth and efficient process for both administrators and users.
 
-<!-- ### ERD:
+### ERD:
 
-![ERD](./erdHotelApi.png) -->
+![ERD](./hotello_erd.png)
 
 # Hotel Reservation System Tasks
 

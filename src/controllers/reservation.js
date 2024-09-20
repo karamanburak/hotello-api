@@ -2,7 +2,7 @@
 /* -------------------------------------------------------
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
-const Reservation = require("../models/reservationModel");
+const Reservation = require("../models/reservation");
 
 module.exports = {
   list: async (req, res) => {

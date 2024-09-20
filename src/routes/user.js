@@ -4,17 +4,19 @@
 ------------------------------------------------------- */
 const router = require("express").Router();
 /* ------------------------------------------------------- */
-const token = require("../controllers/tokenController");
+const user = require("../controllers/user");
 const idValidation = require("../middlewares/idValidation");
+const permission = require("../middlewares/permissions");
 
-router.route("/").get(token.list).post(token.create);
+router.route("/").get(permission.isAdmin, user.list).post(user.create);
+
 router
   .route("/:id")
-  .all(idValidation)
-  .get(token.read)
-  .put(token.update)
-  .patch(token.update)
-  .delete(token.delete);
+  .all(idValidation, permission.isLogin)
+  .get(user.read)
+  .put(user.update)
+  .patch(user.update)
+  .delete(user.delete);
 
 /* ------------------------------------------------------- */
 module.exports = router;
