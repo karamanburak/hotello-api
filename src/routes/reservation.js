@@ -4,22 +4,26 @@
 ------------------------------------------------------- */
 const router = require("express").Router();
 const reservation = require("../controllers/reservation");
-const permissions = require("../middlewares/permissions");
+const {
+  isLogin,
+  isAdmin,
+  canManageReservation,
+} = require("../middlewares/permissions");
 const idValidation = require("../middlewares/idValidation");
 
 /* ------------------------------------------------------- */
 
 router
   .route("/")
-  .get(permissions.isAdmin, reservation.list)
-  .post(reservation.create);
+  .get(isAdmin, reservation.list)
+  .post(isLogin, reservation.create);
 router
   .route("/:id")
   .all(idValidation)
-  .get(reservation.read)
-  .put(reservation.update)
-  .patch(reservation.update)
-  .delete(reservation.delete);
+  .get(isLogin, canManageReservation, reservation.read)
+  .put(isLogin, canManageReservation, reservation.update)
+  .patch(isLogin, canManageReservation, reservation.update)
+  .delete(isLogin, canManageReservation, reservation.delete);
 
 /* ------------------------------------------------------- */
 module.exports = router;

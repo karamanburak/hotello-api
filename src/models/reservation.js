@@ -88,10 +88,7 @@ ReservationSchema.pre("save", async function (next) {
 
   next();
 });
-ReservationSchema.pre("save", function (next) {
-  this.totalPrice = this.night * this.price;
-  next();
-});
+
 ReservationSchema.pre("updateOne", async function (next) {
   const updateData = this.getUpdate();
 
@@ -112,6 +109,18 @@ ReservationSchema.pre("updateOne", async function (next) {
 
     this.set({ totalPrice: nights * room.pricePerNight });
   }
+
+  // Check room availability for the given dates
+  const conflictingReservation = await mongoose.model("Reservation").findOne({
+    roomId: this.roomId,
+    $or: [{ checkIn: { $lt: this.checkOut }, checkOut: { $gt: this.checkIn } }],
+  });
+
+  if (conflictingReservation) {
+    return next(new CustomError("Room is already booked for these dates"));
+  }
+
+  this.totalPrice = nights * room.pricePerNight;
 
   next();
 });
