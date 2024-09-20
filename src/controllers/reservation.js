@@ -31,7 +31,7 @@ module.exports = {
       error: false,
       details: await res.getModelListDetails(Reservation),
       results: reservations.length,
-      reservations,
+      data: reservations,
     });
   },
   create: async (req, res) => {
@@ -55,7 +55,8 @@ module.exports = {
     const newReservation = await Reservation.create(req.body);
     res.status(201).send({
       error: false,
-      newReservation,
+      data: newReservation,
+      message: "Reservation created successfully!",
     });
   },
   read: async (req, res) => {
@@ -66,7 +67,7 @@ module.exports = {
     const reservation = await Reservation.findOne({ _id: req.params.id });
     res.status(200).send({
       error: false,
-      reservation,
+      data: reservation,
     });
   },
   update: async (req, res) => {
@@ -91,8 +92,9 @@ module.exports = {
     );
     res.status(202).send({
       error: false,
-      reservation,
+      new: reservation,
       updatedReservation: await Reservation.findOne({ _id: req.params.id }),
+      message: "Reservation not found!",
     });
   },
   delete: async (req, res) => {
@@ -103,7 +105,8 @@ module.exports = {
     const reservation = await Reservation.deleteOne({ _id: req.params.id });
     res.status(reservation.deletedCount > 0 ? 204 : 404).send({
       error: !reservation.deletedCount,
-      reservation,
+      data: reservation,
+      message: "Reservation not found!",
     });
   },
 };

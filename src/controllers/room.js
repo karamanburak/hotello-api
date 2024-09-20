@@ -24,7 +24,7 @@ module.exports = {
       error: false,
       detail: await res.getModelListDetails(Room),
       results: rooms.length,
-      rooms,
+      data: rooms,
     });
   },
   create: async (req, res) => {
@@ -55,7 +55,8 @@ module.exports = {
     const newRoom = await Room.create(req.body);
     res.status(201).send({
       error: false,
-      newRoom,
+      data: newRoom,
+      message: "Room created successfully!",
     });
   },
   read: async (req, res) => {
@@ -89,8 +90,9 @@ module.exports = {
     });
     res.status(202).send({
       error: false,
-      room,
+      new: room,
       updatedRoom: await Room.findOne({ _id: req.params.id }),
+      message: "Room updated successfully!",
     });
   },
   delete: async (req, res) => {
@@ -101,7 +103,8 @@ module.exports = {
     const room = await Room.deleteOne({ _id: req.params.id });
     res.status(room.deletedCount > 0 ? 204 : 404).send({
       error: !room.deletedCount,
-      room,
+      data: room,
+      message: "Room not found!",
     });
   },
 };

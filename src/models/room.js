@@ -7,10 +7,21 @@ const { mongoose } = require("../configs/dbConnection");
 
 const RoomSchema = new mongoose.Schema(
   {
+    facilitiesId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Facilities",
+      required: true,
+    },
     roomNumber: {
       type: Number,
       required: true,
       unique: true,
+    },
+    roomType: {
+      type: String,
+      trim: true,
+      required: true,
+      enum: ["Single Room", "Double Room", "Twin Room"],
     },
     images: [
       {
@@ -18,15 +29,18 @@ const RoomSchema = new mongoose.Schema(
         trim: true,
       },
     ],
-    bedType: {
-      type: String,
-      trim: true,
+    pricePerNight: {
+      type: Number,
       required: true,
-      enum: ["Small Bed", "Medium Bed", "Large Bed"],
     },
-    price: {
-      type: String,
+    capacity: {
+      type: Number,
       required: true,
+      default: 1,
+    },
+    availability: {
+      type: Boolean,
+      default: true,
     },
   },
   {

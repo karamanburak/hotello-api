@@ -3,6 +3,7 @@
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 const { mongoose } = require("../configs/dbConnection");
+const { CustomError } = require("../errors/customError");
 /* ------------------------------------------------------- */
 
 const ReservationSchema = new mongoose.Schema(
@@ -18,33 +19,35 @@ const ReservationSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    arrivalDate: {
+    checkIn: {
       type: Date,
       required: true,
       trim: true,
     },
-    departureDate: {
+    checkOut: {
       type: Date,
       required: true,
       trim: true,
-    },
-    guestNumber: {
-      type: Number,
-      required: true,
-    },
-    night: {
-      type: Number,
-      // required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
     },
     totalPrice: {
       type: Number,
       // get: function () {
       //   return this.night * this.price;
       // },
+    },
+    guestAdults: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    guestChildren: {
+      type: Number,
+      default: 0,
+    },
+    status: {
+      type: String,
+      enum: ["Pending", "Confirmed", "Cancelled"],
+      default: "Pending",
     },
   },
   {
@@ -53,27 +56,35 @@ const ReservationSchema = new mongoose.Schema(
     // toJSON: { getters: true },
   }
 );
-ReservationSchema.pre("save", function (next) {
+ReservationSchema.pre("save", async function (next) {
   const oneDay = 24 * 60 * 60 * 1000;
 
   // Normalize and trim dates, set them to UTC start of the day
-  this.arrivalDate = new Date(
+  this.checkIn = new Date(
     Date.UTC(
-      this.arrivalDate.getFullYear(),
-      this.arrivalDate.getMonth(),
-      this.arrivalDate.getDate()
+      this.checkIn.getFullYear(),
+      this.checkIn.getMonth(),
+      this.checkIn.getDate()
     )
   );
-  this.departureDate = new Date(
+  this.checkOut = new Date(
     Date.UTC(
-      this.departureDate.getFullYear(),
-      this.departureDate.getMonth(),
-      this.departureDate.getDate()
+      this.checkOut.getFullYear(),
+      this.checkOut.getMonth(),
+      this.checkOut.getDate()
     )
+  );
+  const nights = Math.round(
+    (this.checkOut.getTime() - this.checkIn.getTime()) / oneDay
   );
 
-  // Calculate the number of nights
-  this.night = Math.round((this.departureDate - this.arrivalDate) / oneDay);
+  const room = await mongoose.model("Room").findById(this.roomId);
+
+  if (!room) {
+    return next(new CustomError("Room not found"));
+  }
+
+  this.totalPrice = nights * room.pricePerNight;
 
   next();
 });
@@ -82,20 +93,26 @@ ReservationSchema.pre("save", function (next) {
   next();
 });
 ReservationSchema.pre("updateOne", async function (next) {
-  // do stuff
   const updateData = this.getUpdate();
-  // console.log(updateData);
-  let newPrice = updateData.price;
-  let newNight = updateData.night;
 
-  if (newPrice || newNight) {
-    if (!newPrice || !newNight) {
-      const oldData = await this.model.findOne(this.getQuery());
-      newPrice = newPrice || oldData.price;
-      newNight = newNight || oldData.night;
+  if (updateData.checkIn && updateData.checkOut) {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const nights = Math.round(
+      (new Date(updateData.checkOut).getTime() -
+        new Date(updateData.checkIn).getTime()) /
+        oneDay
+    );
+
+    const reservation = await this.model.findOne(this.getQuery());
+    const room = await mongoose.model("Room").findById(reservation.roomId);
+
+    if (!room) {
+      return next(new CustomError("Room not found"));
     }
-    this.set({ totalPrice: newPrice * newNight });
+
+    this.set({ totalPrice: nights * room.pricePerNight });
   }
+
   next();
 });
 

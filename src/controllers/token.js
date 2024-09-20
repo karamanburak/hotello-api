@@ -24,7 +24,7 @@ module.exports = {
       error: false,
       detail: await res.getModelListDetails(Token),
       results: tokens.length,
-      tokens,
+      data: tokens,
     });
   },
   create: async (req, res) => {
@@ -35,7 +35,7 @@ module.exports = {
     const newToken = await Token.create(req.body);
     res.status(201).send({
       error: false,
-      newToken,
+      data: newToken,
     });
   },
   read: async (req, res) => {
@@ -46,7 +46,7 @@ module.exports = {
     const token = await Token.findById(req.params.id);
     res.status(200).send({
       error: false,
-      token,
+      data: token,
     });
   },
   update: async (req, res) => {
@@ -59,7 +59,7 @@ module.exports = {
     });
     res.status(202).send({
       error: false,
-      token,
+      new: token,
       updatedToken: await Token.findOne({ _id: req.params.id }),
     });
   },
@@ -71,7 +71,7 @@ module.exports = {
     const token = await Token.deleteOne({ _id: req.params.id });
     res.status(token.deletedCount > 0 ? 204 : 404).send({
       error: !token.deletedCount,
-      token,
+      data: token,
     });
   },
 };

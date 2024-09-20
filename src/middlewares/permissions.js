@@ -9,7 +9,6 @@ const { CustomError } = require("../errors/customError");
 module.exports = {
   isLogin: (req, res, next) => {
     if (req.user && req.user.isActive) {
-      //* req.user.isActive olmasini sorgulamamizin nedeni admin kullaniciyi atarsa aktif degildir islem yapmamali!!
       next();
     } else {
       throw new CustomError("NoPermission: You must login!", 403);

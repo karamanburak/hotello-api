@@ -45,7 +45,7 @@ app.use(morgan("dev"));
 app.all("/", (req, res) => {
   res.send({
     error: false,
-    message: "Welcome to HOTEL API",
+    message: "Welcome to HOTELLO API",
     docs: {
       swagger: "/documents/swagger",
       redoc: "/documents/redoc",

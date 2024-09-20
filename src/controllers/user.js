@@ -26,7 +26,7 @@ module.exports = {
       error: false,
       detail: await res.getModelListDetails(User),
       results: users.length,
-      users,
+      data: users,
     });
   },
   create: async (req, res) => {
@@ -54,7 +54,8 @@ module.exports = {
     );
     res.status(201).send({
       error: false,
-      newUser,
+      data: newUser,
+      message: "User created successfully!",
     });
   },
   read: async (req, res) => {
@@ -86,8 +87,9 @@ module.exports = {
     });
     res.send({
       error: false,
-      user,
+      new: user,
       updatedUser: await User.findOne({ _id: req.params.id }),
+      message: "User updated successfully!",
     });
   },
   delete: async (req, res) => {
@@ -98,7 +100,7 @@ module.exports = {
     const user = await User.deleteOne({ _id: req.params.id });
     res.status(user.deletedCount ? 204 : 404).send({
       error: !user.deletedCount,
-      user,
+      data: user,
       message: "User not found!",
     });
   },
