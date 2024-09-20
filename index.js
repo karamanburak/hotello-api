@@ -8,6 +8,13 @@ const morgan = require("morgan");
 const app = express();
 
 /* ------------------------------------------------------- */
+
+//* cron job
+const job = require("./src/helpers/cron");
+console.log("Cron job is being started...");
+// Start the cron job
+job.start();
+
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
 
