@@ -87,8 +87,8 @@ module.exports = {
     });
     res.send({
       error: false,
-      new: user,
-      updatedUser: await User.findOne({ _id: req.params.id }),
+      data: user,
+      new: await User.findOne({ _id: req.params.id }),
       message: "User updated successfully!",
     });
   },

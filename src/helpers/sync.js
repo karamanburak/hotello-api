@@ -11,31 +11,35 @@ const Room = require("../models/room");
 const Reservation = require("../models/reservation");
 const Review = require("../models/review");
 const Facility = require("../models/facility");
+// const Payment = require("../models/payment");
 
 module.exports = async function () {
   try {
     // return null
 
     // Reset the database
-    await mongoose.connection.dropDatabase();
-    console.log("- Database and all data DELETED!");
+    // await mongoose.connection.dropDatabase();
+    // console.log("- Database and all data DELETED!");
     // Reset the database
 
     /* Rooms */
     const rooms = [
       {
+        roomId: 101,
         roomNumber: 101,
         image: "room101.jpg",
         roomType: "Single Room",
         price: 100,
       },
       {
+        roomId: 102,
         roomNumber: 102,
         image: "room102.jpg",
         roomType: "Double Room",
         price: 150,
       },
       {
+        roomId: 103,
         roomNumber: 103,
         image: "room103.jpg",
         roomType: "Twin Room",
@@ -55,6 +59,7 @@ module.exports = async function () {
     /* Users */
     const users = [
       {
+        userId: 1,
         username: "user1",
         password: "Password1!",
         isStaff: "false",
@@ -62,12 +67,14 @@ module.exports = async function () {
         email: "user1@example.com",
       },
       {
+        userId: 2,
         username: "user2",
         password: "Password1!",
         isStaff: "true",
         email: "user2@example.com",
       },
       {
+        userId: 3,
         username: "admin",
         password: "Password1!",
         email: "admin@example.com",
@@ -102,7 +109,7 @@ module.exports = async function () {
         guestChildren: 2,
       },
     ];
-
+    const savedReservations = [];
     for (const reservationData of reservations) {
       try {
         await Reservation.create(reservationData);
@@ -111,6 +118,31 @@ module.exports = async function () {
         console.error("Error adding reservation:", err);
       }
     }
+
+    /* Payments */
+    // const payments = [
+    //   {
+    //     reservationId: savedReservations[0]._id, // Link to the first reservation
+    //     paymentMethod: "Credit Card",
+    //     status: "Completed",
+    //   },
+    //   {
+    //     reservationId: savedReservations[1]._id, // Link to the second reservation
+    //     paymentMethod: "PayPal",
+    //     status: "Pending",
+    //   },
+    // ];
+
+    // for (const paymentData of payments) {
+    //   try {
+    //     await Payment.create(paymentData);
+    //     console.log(
+    //       `- Payment for Reservation ${paymentData.reservationId} Added.`
+    //     );
+    //   } catch (err) {
+    //     console.error("Error adding payment:", err);
+    //   }
+    // }
 
     /* Reviews */
     const reviews = [

@@ -59,8 +59,8 @@ module.exports = {
     });
     res.status(202).send({
       error: false,
-      new: token,
-      updatedToken: await Token.findOne({ _id: req.params.id }),
+      data: token,
+      new: await Token.findOne({ _id: req.params.id }),
     });
   },
   delete: async (req, res) => {

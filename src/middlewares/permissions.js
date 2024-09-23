@@ -3,7 +3,9 @@
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 
-const CustomError = require("../errors/customError");
+const { CustomError } = require("../errors/customError");
+const Reservation = require("../models/reservation");
+const Review = require("../models/review");
 
 module.exports = {
   // Check if the user is logged in
@@ -12,6 +14,14 @@ module.exports = {
       next();
     } else {
       throw new CustomError("NoPermission: You must log in!", 403);
+    }
+  },
+
+  isActive: (req, res, next) => {
+    if (req.user && req.user.isActive) {
+      next();
+    } else {
+      throw new CustomError("NoPermission: Your account is inactive!", 403);
     }
   },
 
@@ -52,8 +62,8 @@ module.exports = {
   },
 
   // Check if the user has permission to manage a reservation
-  canManageReservation: (req, res, next) => {
-    const reservationUserId = req.reservation.userId.toString();
+  canManageReservation: async (req, res, next) => {
+    const reservationUserId = await Reservation.findById(req.params.id);
     if (req.user && (req.user.isAdmin || req.user.id === reservationUserId)) {
       next();
     } else {
@@ -63,11 +73,18 @@ module.exports = {
       );
     }
   },
+
   // Check if the user has permission to manage a review
-  canManageReview: (req, res, next) => {
-    const reviewUserId = req.review.userId.toString();
-    if (req.user && (req.user.isAdmin || req.user.id === reviewUserId)) {
-      next();
+  canManageReview: async (req, res, next) => {
+    const review = await Review.findById(req.params.id); // Get the review document
+
+    if (!review) {
+      throw new CustomError("Review not found", 404);
+    }
+
+    // Compare the review's userId with the logged-in user's ID
+    if (req.user && req.user.id === review.userId.toString()) {
+      next(); // User has permission
     } else {
       throw new CustomError(
         "NoPermission: You are not allowed to manage this review!",

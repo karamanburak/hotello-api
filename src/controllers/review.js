@@ -22,7 +22,7 @@ module.exports = {
             `
         */
 
-    const reviews = await res.getModelList(Review);
+    const reviews = await res.getModelList(Review, {}, "userId");
     res.status(200).send({
       error: false,
       details: await res.getModelListDetails(Review),
@@ -44,7 +44,7 @@ module.exports = {
       },
   }
         */
-    const newReview = await Review.create(req.body);
+    const newReview = await (await Review.create(req.body)).populate("userId");
     res.status(201).send({
       error: false,
       data: newReview,
@@ -56,7 +56,7 @@ module.exports = {
             #swagger.tags = ["Reviews"]
             #swagger.summary = "Get Single Review"
         */
-    const review = await Review.findById(req.params.id);
+    const review = await Review.findById(req.params.id).populate("userId");
     res.status(200).send({
       error: false,
       data: review,
@@ -82,8 +82,8 @@ module.exports = {
     });
     res.status(202).send({
       error: false,
-      new: review,
-      updatedReview: await Review.findOne({ _id: req.params.id }),
+      data: review,
+      new: await Review.findOne({ _id: req.params.id }),
       message: "Review updated successfully",
     });
   },

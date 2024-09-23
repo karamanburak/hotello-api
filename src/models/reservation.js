@@ -112,15 +112,18 @@ ReservationSchema.pre("updateOne", async function (next) {
 
   // Check room availability for the given dates
   const conflictingReservation = await mongoose.model("Reservation").findOne({
-    roomId: this.roomId,
-    $or: [{ checkIn: { $lt: this.checkOut }, checkOut: { $gt: this.checkIn } }],
+    roomId: updateData.roomId,
+    $or: [
+      {
+        checkIn: { $lt: updateData.checkOut },
+        checkOut: { $gt: updateData.checkIn },
+      },
+    ],
   });
 
   if (conflictingReservation) {
     return next(new CustomError("Room is already booked for these dates"));
   }
-
-  this.totalPrice = nights * room.pricePerNight;
 
   next();
 });

@@ -64,7 +64,9 @@ module.exports = {
             #swagger.tags = ["Reservations"]
             #swagger.summary = "Get Single Reservation"
         */
-    const reservation = await Reservation.findOne({ _id: req.params.id });
+    const reservation = await Reservation.findOne({
+      _id: req.params.id,
+    }).populate([{ path: "userId" }, { path: "roomId" }]);
     res.status(200).send({
       error: false,
       data: reservation,
@@ -92,8 +94,8 @@ module.exports = {
     );
     res.status(202).send({
       error: false,
-      new: reservation,
-      updatedReservation: await Reservation.findOne({ _id: req.params.id }),
+      data: reservation,
+      new: await Reservation.findOne({ _id: req.params.id }),
       message: "Reservation not found!",
     });
   },

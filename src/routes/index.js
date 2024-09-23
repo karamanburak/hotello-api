@@ -16,6 +16,10 @@ router.use("/rooms", require("./room"));
 router.use("/reservations", require("./reservation"));
 // facility:
 router.use("/facilities", require("./facility"));
+// review:
+router.use("/reviews", require("./review"));
+// payment:
+router.use("/payments", require("./payment"));
 // document:
 router.use("/documents", require("./documents"));
 

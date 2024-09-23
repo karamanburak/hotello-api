@@ -87,13 +87,17 @@ module.exports = {
   }
         */
 
-    const facility = await updateOne({ _id: req.params.id }, req.body, {
-      runValidators: true,
-    });
+    const facility = await Facility.updateOne(
+      { _id: req.params.id },
+      req.body,
+      {
+        runValidators: true,
+      }
+    );
     res.status(202).send({
       error: false,
-      new: facility,
-      updatedFacility: await Facility.findOne({ _id: req.params.id }),
+      facility,
+      new: await Facility.findOne({ _id: req.params.id }),
       message: "Facility updated successfully!",
     });
   },
@@ -103,7 +107,7 @@ module.exports = {
             #swagger.summary = "Delete Facility"
         */
 
-    const facility = await deleteOne({ _id: req.params.id });
+    const facility = await Facility.deleteOne({ _id: req.params.id });
     res.status(facility.deletedCount > 0 ? 204 : 404).send({
       error: !facility.deletedCount,
       data: facility,

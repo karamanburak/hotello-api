@@ -51,6 +51,12 @@ const UserSchema = new mongoose.Schema(
       //     "Email is invalid!",
       // ],
     },
+    avatar: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     isActive: {
       type: Boolean,
       default: true,

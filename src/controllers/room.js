@@ -90,8 +90,8 @@ module.exports = {
     });
     res.status(202).send({
       error: false,
-      new: room,
-      updatedRoom: await Room.findOne({ _id: req.params.id }),
+      data: room,
+      new: await Room.findOne({ _id: req.params.id }),
       message: "Room updated successfully!",
     });
   },
