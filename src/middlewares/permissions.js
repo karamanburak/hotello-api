@@ -4,6 +4,7 @@
 ------------------------------------------------------- */
 
 const { CustomError } = require("../errors/customError");
+const Payment = require("../models/payment");
 const Reservation = require("../models/reservation");
 const Review = require("../models/review");
 
@@ -49,9 +50,17 @@ module.exports = {
   },
 
   // Allow users to access only their own data
-  isSelf: (req, res, next) => {
-    const userId = req.params.id; // Get the user id from request parameters
-    if (req.user && req.user.id === userId) {
+  isSelf: async (req, res, next) => {
+    const payment = await Payment.findById(req.params.id).populate(
+      "reservationId"
+    );
+    if (!payment) {
+      throw new CustomError("Payment not found", 404);
+    }
+    if (
+      req.user &&
+      req.user._id.toString() === payment.reservationId.userId.toString()
+    ) {
       next();
     } else {
       throw new CustomError(
@@ -63,8 +72,16 @@ module.exports = {
 
   // Check if the user has permission to manage a reservation
   canManageReservation: async (req, res, next) => {
-    const reservationUserId = await Reservation.findById(req.params.id);
-    if (req.user && (req.user.isAdmin || req.user.id === reservationUserId)) {
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) {
+      throw new CustomError("Reservation not found", 404);
+    }
+    // console.log(req.user);
+
+    if (
+      req.user &&
+      (req.user.isAdmin || req.user._id === reservation.userId.toString())
+    ) {
       next();
     } else {
       throw new CustomError(
@@ -77,13 +94,16 @@ module.exports = {
   // Check if the user has permission to manage a review
   canManageReview: async (req, res, next) => {
     const review = await Review.findById(req.params.id); // Get the review document
-
     if (!review) {
       throw new CustomError("Review not found", 404);
     }
 
     // Compare the review's userId with the logged-in user's ID
-    if (req.user && req.user.id === review.userId.toString()) {
+    // console.log(req.user);
+    if (
+      req.user &&
+      (req.user.isAdmin || req.user._id === review.userId.toString())
+    ) {
       next(); // User has permission
     } else {
       throw new CustomError(

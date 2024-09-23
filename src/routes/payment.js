@@ -11,7 +11,7 @@ const idValidation = require("../middlewares/idValidation");
 
 router.route("/").get(isAdmin, payment.list).post(isActive, payment.create);
 router
-  .route("/id")
+  .route("/:id")
   .all(idValidation)
   .get(isSelf, payment.read)
   .put(isSelf, payment.update)

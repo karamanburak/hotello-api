@@ -22,7 +22,7 @@ module.exports = {
             `
         */
 
-    const payments = await res.getModelList(Payment);
+    const payments = await res.getModelList(Payment, {}, "reservationId");
     res.status(200).send({
       error: false,
       details: await res.getModelListDetails(Payment),
@@ -57,7 +57,13 @@ module.exports = {
             #swagger.tags = ["Payments"]
             #swagger.summary = "Get Single Payment"
         */
-    const payment = await Payment.findOne({ _id: req.params.id });
+    const payment = await Payment.findOne({ _id: req.params.id }).populate({
+      path: "reservationId",
+      populate: {
+        path: "userId",
+        model: "User",
+      },
+    });
     res.status(200).send({
       error: false,
       data: payment,

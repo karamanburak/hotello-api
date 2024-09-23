@@ -22,7 +22,7 @@ router
   .get(review.read)
   .put(isLogin, canManageReview, review.update)
   .patch(isLogin, canManageReview, review.update)
-  .delete(isLogin, isAdmin, canManageReview, review.delete);
+  .delete(isLogin, canManageReview, review.delete);
 
 /* ------------------------------------------------------- */
 module.exports = router;
