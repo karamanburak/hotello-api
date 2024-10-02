@@ -10,10 +10,21 @@ const app = express();
 /* ------------------------------------------------------- */
 
 //* cron job
-const job = require("./src/helpers/cron");
-console.log("Cron job is being started...");
-// Start the cron job
-job.start();
+// const job = require("./src/helpers/cron");
+// console.log("Cron job is being started...");
+// // Start the cron job
+// job.start();
+
+// CORS
+const cors = require("cors");
+
+const corsOptions = {
+  origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  allowedHeaders: ["Origin", "Content-Type", "Authorization"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
@@ -31,7 +42,7 @@ dbConnection();
 /* -------------------------------------------------------------------------- */
 app.use(express.json());
 
-app.use(require("./src/middlewares/findSearchSortPagi"));
+app.use(require("./src/middlewares/queryHandler"));
 
 app.use(require("./src/middlewares/authentication"));
 

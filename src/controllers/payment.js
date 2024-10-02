@@ -25,8 +25,7 @@ module.exports = {
     const payments = await res.getModelList(Payment, {}, "reservationId");
     res.status(200).send({
       error: false,
-      details: await res.getModelListDetails(Payment),
-      results: payments.length,
+      details: await res.getModelListDetails(Payment, {}),
       data: payments,
     });
   },

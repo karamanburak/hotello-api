@@ -29,8 +29,7 @@ module.exports = {
     ]);
     res.status(200).send({
       error: false,
-      details: await res.getModelListDetails(Reservation),
-      results: reservations.length,
+      details: await res.getModelListDetails(Reservation, customFilter),
       data: reservations,
     });
   },

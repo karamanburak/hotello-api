@@ -25,7 +25,6 @@ module.exports = {
     res.status(200).send({
       error: false,
       detail: await res.getModelListDetails(User),
-      results: users.length,
       data: users,
     });
   },
@@ -43,6 +42,27 @@ module.exports = {
         }
   }
         */
+
+    const { email, username } = req.body;
+
+    // Check if the email already exists
+    const existingUserByEmail = await User.findOne({ email });
+    if (existingUserByEmail) {
+      return res.status(400).send({
+        error: true,
+        message: "Email already exists. Please use a different email address.",
+      });
+    }
+
+    // Check if the username already exists
+    const existingUserByUsername = await User.findOne({ username });
+    if (existingUserByUsername) {
+      return res.status(400).send({
+        error: true,
+        message: "Username already exists. Please use a different username.",
+      });
+    }
+
     const newUser = await User.create(req.body);
 
     sendMail(

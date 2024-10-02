@@ -23,7 +23,6 @@ module.exports = {
     res.status(200).send({
       error: false,
       detail: await res.getModelListDetails(Room),
-      results: rooms.length,
       data: rooms,
     });
   },

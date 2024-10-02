@@ -25,8 +25,7 @@ module.exports = {
     const reviews = await res.getModelList(Review, {}, "userId");
     res.status(200).send({
       error: false,
-      details: await res.getModelListDetails(Review),
-      results: reviews.length,
+      details: await res.getModelListDetails(Review, {}),
       data: reviews,
     });
   },
