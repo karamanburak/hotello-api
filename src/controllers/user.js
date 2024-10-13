@@ -1,10 +1,18 @@
 "use strict";
-const sendMail = require("../helpers/sendMail");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+  setTokenCookie,
+} = require("../helpers/generateToken");
+const sendMail = require("../configs/email/nodeMailer");
 /* -------------------------------------------------------
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 
 const User = require("../models/user");
+const {
+  generateTokenAndSetCookie,
+} = require("../utils/generateTokenAndSetCookie");
 
 module.exports = {
   list: async (req, res) => {
@@ -21,6 +29,7 @@ module.exports = {
                 </ul>
             `
         */
+
     const users = await res.getModelList(User);
     res.status(200).send({
       error: false,
@@ -43,7 +52,7 @@ module.exports = {
   }
         */
 
-    const { email, username } = req.body;
+    const { email, username, firstName, lastName, password } = req.body;
 
     // Check if the email already exists
     const existingUserByEmail = await User.findOne({ email });
@@ -63,19 +72,37 @@ module.exports = {
       });
     }
 
-    const newUser = await User.create(req.body);
+    const verificationToken = Math.floor(
+      10000 + Math.random() * 900000
+    ).toString();
+
+    const newUser = await User.create({
+      username,
+      firstName,
+      lastName,
+      email,
+      password,
+      verificationToken,
+      verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    });
+
+    //JWT
+    generateTokenAndSetCookie(res, newUser._id);
+    sendVerificationEmail(newUser.email, verificationToken);
 
     sendMail(
-      // newUser.email,
-      newUser.username,
-      "Welcome to the HOTEL!",
-      // `Welcome, ${(newUser, req.body.username)}`
-      `Welcome, ${newUser.username}`
+      newUser.email,
+      "Welcome to the HOTELLO",
+      `<h1>Welcome ${firstName.toUpperCase()} ${lastName.toUpperCase()}</h1> <p>Your account successfully created</p>`
     );
+
     res.status(201).send({
       error: false,
-      data: newUser,
       message: "User created successfully!",
+      newUser: {
+        ...newUser._doc,
+        password: undefined,
+      },
     });
   },
   read: async (req, res) => {
@@ -98,7 +125,7 @@ module.exports = {
       required : true,
       schema:{
     "email":"admin@example.com",
-    "isAdmin":"true"
+    "role":"admin"
         }
   }
         */

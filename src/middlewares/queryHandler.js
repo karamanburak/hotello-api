@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
   }
 
   //? Sorting
-  const sort = req.query?.sort || "-createdAt";
+  const sort = req.query?.sort || {};
 
   //! Price filtering
   const priceRange = req.query?.priceRange || {};

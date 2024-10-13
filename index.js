@@ -6,6 +6,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
+const cookieParser = require("cookie-parser");
 
 /* ------------------------------------------------------- */
 
@@ -29,7 +30,9 @@ app.use(cors(corsOptions));
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
 
+app.use(cookieParser());
 require("express-async-errors");
+
 /* -------------------------------------------------------------------------- */
 /*                               CONFIGURATIONS                               */
 /* -------------------------------------------------------------------------- */
@@ -40,11 +43,11 @@ dbConnection();
 /* -------------------------------------------------------------------------- */
 /*                               MIDDLEWARES                                  */
 /* -------------------------------------------------------------------------- */
-app.use(express.json());
+app.use(express.json()); // allows us to parse incoming requests:req.body
 
 app.use(require("./src/middlewares/queryHandler"));
 
-app.use(require("./src/middlewares/authentication"));
+app.use(require("./src/middlewares/auth"));
 
 app.use(require("./src/middlewares/logging"));
 app.use(morgan("dev"));
@@ -68,8 +71,6 @@ app.all("/", (req, res) => {
 
 //* Static root
 app.use("/uploads", express.static("./uploads"));
-
-// console.log("668a947fda3efd683614df26" + Date.now());
 
 app.use("/", require("./src/routes/"));
 

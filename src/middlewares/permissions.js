@@ -28,7 +28,11 @@ module.exports = {
 
   // Check if the user is an Admin
   isAdmin: (req, res, next) => {
-    if (req.user && req.user.isActive && req.user.isAdmin) {
+    if (
+      req.user &&
+      req.user.isActive &&
+      req.user?.role?.toLowerCase() === "admin"
+    ) {
       next();
     } else {
       throw new CustomError(
@@ -39,7 +43,11 @@ module.exports = {
   },
 
   isLoginAdmin: (req, res, next) => {
-    if (req.user && req.user.isActive && req.user.isAdmin) {
+    if (
+      req.user &&
+      req.user?.isActive &&
+      req.user?.role?.toLowerCase() === "admin"
+    ) {
       next();
     } else {
       throw new CustomError(
@@ -80,7 +88,8 @@ module.exports = {
 
     if (
       req.user &&
-      (req.user.isAdmin || req.user._id === reservation.userId.toString())
+      (req.user?.role?.toLowerCase() === "admin" ||
+        req.user._id === reservation.userId.toString())
     ) {
       next();
     } else {
@@ -102,7 +111,8 @@ module.exports = {
     // console.log(req.user);
     if (
       req.user &&
-      (req.user.isAdmin || req.user._id === review.userId.toString())
+      (req.user?.role?.toLowerCase() === "admin" ||
+        req.user._id === review.userId.toString())
     ) {
       next(); // User has permission
     } else {

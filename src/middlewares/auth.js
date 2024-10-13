@@ -6,7 +6,6 @@
 // app.use(authentication);
 
 /* -------------------------------------------------------------------------- */
-const Token = require("../models/token");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 /* -------------------------------------------------------------------------- */
@@ -17,7 +16,7 @@ module.exports = async (req, res, next) => {
 
   if (tokenKey && tokenKey[0] == "Bearer") {
     try {
-      //* Promisify jwt.verify to use async/await:
+      // Promisify jwt.verify to use async/await:
       const verify = promisify(jwt.verify);
       const accessData = await verify(tokenKey[1], process.env.ACCESS_KEY);
       console.log("JWT verified");

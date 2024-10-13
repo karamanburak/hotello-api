@@ -62,7 +62,7 @@ module.exports = async function () {
         userId: 1,
         username: "user1",
         password: "Password1!",
-        isStaff: "false",
+        role: "user",
 
         email: "user1@example.com",
       },
@@ -70,7 +70,7 @@ module.exports = async function () {
         userId: 2,
         username: "user2",
         password: "Password1!",
-        isStaff: "true",
+        role: "staff",
         email: "user2@example.com",
       },
       {
@@ -78,7 +78,7 @@ module.exports = async function () {
         username: "admin",
         password: "Password1!",
         email: "admin@example.com",
-        isAdmin: "true",
+        role: "admin",
       },
     ];
 

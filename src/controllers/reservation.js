@@ -20,12 +20,15 @@ module.exports = {
             `
         */
     let customFilter = {};
-    if (!req.user.isAdmin) {
+    if (!req.user.role === "admin") {
       customFilter = { userId: req.user._id };
     }
     const reservations = await res.getModelList(Reservation, customFilter, [
-      "userId",
-      "roomId",
+      {
+        path: "userId",
+        select: "_id username firstName lastName email avatar",
+      },
+      { path: "roomId", select: "roomNumber roomType pricePerNight" },
     ]);
     res.status(200).send({
       error: false,

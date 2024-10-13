@@ -3,12 +3,18 @@
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 
-// const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const Token = require("../models/token");
 const { CustomError } = require("../errors/customError");
-const passwordEncrypt = require("../helpers/passwordEncrypt");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+  setTokenCookie,
+  clearTokenCookie,
+  verifyToken,
+} = require("../helpers/generateToken");
+const otpGenerator = require("otp-generator");
 
 module.exports = {
   login: async (req, res) => {
@@ -25,143 +31,128 @@ module.exports = {
                 }
             }
         */
+
     const { username, email, password } = req.body;
 
-    if (password && (username || email)) {
-      const user = await User.findOne({ $or: [{ username }, { email }] });
-      if (user && user.password == passwordEncrypt(password)) {
-        if (user.isActive) {
-          // SIMPLE TOKEN \\
-          // let tokenData = await Token.findOne({ userId: user._id }); // Bu user'a ait token var mi yok mu kontrol et varsa olani döndürür.
-          // if (!tokenData) {
-          //   // usera ait token bilgisi yoksa yenisini olustur
-          //   tokenData = await Token.create({
-          //     userId: user._id,
-          //     token: passwordEncrypt(user._id + Date.now()),
-          //   });
-          // }
-          // SIMPLE TOKEN \\
-
-          // JWT TOKEN \\
-          // ACCESS TOKEN \\
-          const accessInfo = {
-            key: process.env.ACCESS_KEY,
-            time: process.env.ACCESS_EXP || "30m",
-            data: {
-              _id: user._id,
-              username: user.username,
-              email: user.email,
-              password: user.password,
-              isActive: user.isActive,
-              isAdmin: user.isAdmin,
-            },
-          };
-
-          // REFRESH TOKEN \\
-          const refreshInfo = {
-            key: process.env.REFRESH_KEY,
-            time: process.env.REFRESH_EXP || "1d",
-            data: {
-              _id: user._id,
-              password: user.password,
-            },
-          };
-          // jwt.sign(data,secret_key) \\
-          const accessToken = jwt.sign(accessInfo.data, accessInfo.key, {
-            expiresIn: accessInfo.time,
-          });
-
-          const refreshToken = jwt.sign(refreshInfo.data, refreshInfo.key, {
-            expiresIn: refreshInfo.time,
-          });
-          // JWT TOKEN \\
-
-          res.status(200).send({
-            error: false,
-            bearer: {
-              access: accessToken,
-              refresh: refreshToken,
-            },
-            // token: tokenData.token,
-            user,
-          });
-        } else {
-          throw new CustomError("This account is in active", 401);
-        }
-      } else {
-        throw new CustomError("Wrong username/email or password!", 401);
-      }
-    } else {
-      throw new CustomError("Please enter username/email and password", 401);
+    if (!password || !(username || email)) {
+      throw new CustomError("Please provide both email and password.", 401);
     }
+
+    const user = await User.findOne({ $or: [{ username }, { email }] }).select(
+      "+password"
+    );
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      throw new CustomError(
+        "User not found. Please check your email or password and try again.",
+        401
+      );
+    }
+    if (!user.isActive) {
+      return res.status(401).send({
+        error: true,
+        message: "This account is inactive",
+      });
+    }
+
+    const payload = {
+      userId: user._id,
+      username: user.username,
+      email: user.email,
+      isActive: user.isActive,
+      role: user.role,
+    };
+
+    const accessToken = generateAccessToken(payload);
+    const refreshToken = generateRefreshToken({ userId: user._id });
+
+    // Write AccessToken to cookie
+    setTokenCookie(res, accessToken);
+
+    res.status(200).send({
+      error: false,
+      message: "Logged in successfully",
+      bearer: {
+        access: accessToken,
+        refresh: refreshToken,
+      },
+      user,
+    });
   },
   refresh: async (req, res) => {
-    /*
-            #swagger.tags = ["Authentication"]
-            #swagger.summary = "Refresh token"
-        */
+    const refreshToken = req.body?.bearer?.refresh;
 
-    const refreshToken = req.body?.bearer.refresh;
-    if (refreshToken) {
-      const refreshData = jwt.verify(refreshToken, process.env.REFRESH_KEY);
-      if (refreshData) {
-        const user = await User.findOne({ _id: refreshData._id });
-        if (user && user.password == refreshData.password) {
-          res.status(200).send({
-            error: false,
-            bearer: {
-              access: jwt.sign(user.JSON(), process.env.ACCESS_KEY, {
-                expiresIn: process.env.ACCESS_EXP,
-              }),
-            },
-          });
-        } else {
-          throw new CustomError("Wrong data!", 401);
-        }
-      } else {
-        throw new CustomError("Refresh data is wrong!", 401);
-      }
-    } else {
+    if (!refreshToken) {
       throw new CustomError("Please enter refresh token!", 401);
     }
+
+    try {
+      const refreshData = verifyToken(refreshToken, process.env.REFRESH_KEY);
+
+      const user = await User.findOne({ _id: refreshData.userId });
+
+      if (!user) {
+        throw new CustomError("User not found!", 401);
+      }
+
+      // Create new accessToken
+      const payload = {
+        userId: user._id,
+        username: user.username,
+        email: user.email,
+        isActive: user.isActive,
+        role: user.role,
+      };
+
+      const newAccessToken = generateAccessToken(payload);
+
+      // return newAccessToken
+      res.status(200).send({
+        error: false,
+        bearer: {
+          access: newAccessToken,
+        },
+      });
+    } catch (error) {
+      throw new CustomError("Invalid or expired refresh token!", 401);
+    }
+  },
+
+  generateOTP: async (req, res) => {
+    let OTP = await otpGenerator.generate(6, {
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false,
+    });
+    res.status(200).send({
+      error: false,
+      message: "OTP sent successfully to your email",
+    });
+  },
+  verifyOTP: async (req, res) => {
+    res.status(200).send({
+      error: false,
+      message: "OTP verified successfully",
+    });
+  },
+  createResetSession: async (req, res) => {
+    res.status(200).send({
+      error: false,
+      message: "Reset session created successfully",
+    });
+  },
+  resetPassword: async (req, res) => {
+    res.status(200).send({
+      error: false,
+      message: "Password reset successfully",
+    });
   },
   logout: async (req, res) => {
-    /*
-            #swagger.tags = ["Authentication"]
-            #swagger.summary = "JWT: Logout"
-            #swagger.description = 'Delete token key.'
-        */
-    //* 1. yöntem (Tüm oturumlari kapatir yani tüm tokenlari siler not: userId bizim kurgumuzda unique oldugu icin!!!)
-    // const deleted = await Token.deleteOne({ userId: req.user._id });
-
-    // res.status(deleted.deletedCount > 0 ? 200 : 404).send({
-    //   error: !deleted.deletedCount,
-    //   deleted,
-    //   message: deleted.deletedCount > 0 ? "Logout OK" : "Logout Failed!",
-    // });
-    // console.log(req.user);
-
-    //* 2. yöntem (Tüm oturumlari kapatir yani tüm tokenlari siler)
-    // const deleted = await Token.deleteMany({ userId: req.user._id });
-    // console.log(req.user);
-
-    //* 3. yöntem (Tek bir oturumu kapatir yani tek bir tokeni siler)
-    const auth = req.headers?.authorization;
-    const tokenKey = auth ? auth.split(" ") : null;
-
-    let deleted = null;
-    if (tokenKey && tokenKey[0] == "Token") {
-      deleted = await Token.deleteOne({ token: tokenKey[1] });
-      res.status(deleted?.deletedCount > 0 ? 200 : 400).send({
-        error: !deleted?.deletedCount,
-        deleted,
-        message: deleted?.deletedCount > 0 ? "Logout Ok" : "Logout Failed",
-      });
-    } else {
-      res.send({
-        error: false,
-        message: "Logout Ok!",
-      });
-    }
+    clearTokenCookie(res);
+    return res.status(200).send({
+      error: false,
+      message: "User successfully logged out",
+    });
   },
 };
