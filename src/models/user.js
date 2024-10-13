@@ -84,13 +84,13 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    isUnsubscribe: {
+    isSubscribe: {
       type: Boolean,
       default: true,
     },
     passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpiresAt: Date,
+    resetPasswordToken: String,
+    resetPasswordExpiresAt: Date,
     verificationToken: String,
     verificationTokenExpiresAt: Date,
   },

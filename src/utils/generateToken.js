@@ -38,16 +38,23 @@ const generateRefreshToken = (payload) => {
   );
 };
 
+// Function to create a Reset Token (e.g., for password reset)
+const generateResetToken = (userId) => {
+  return generateToken(
+    { userId },
+    process.env.RESET_KEY,
+    process.env.RESET_EXP || "2"
+  );
+};
+
 // Function to write the token to a cookie
-const setTokenCookie = (res, token, options = {}) => {
+const generateTokenAndSetCookie = (res, token, options = {}) => {
   const defaultOptions = {
     httpOnly: true,
-    sameSite: process.env.NODE_ENV !== "development" ? "None" : "Lax",
-    secure: process.env.NODE_ENV !== "development",
-    maxAge: 60 * 60 * 1000, // 1h
-    // maxAge: 5000, // 5s
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
     path: "/",
-    ...options,
+    maxAge: 60 * 60 * 1000, // 1 hour
   };
 
   res.cookie("sessionId", token, defaultOptions);
@@ -70,8 +77,9 @@ const clearTokenCookie = (res) => {
 module.exports = {
   generateAccessToken,
   generateRefreshToken,
+  generateResetToken,
   verifyToken,
-  setTokenCookie,
+  generateTokenAndSetCookie,
   getTokenFromCookies,
   clearTokenCookie,
 };

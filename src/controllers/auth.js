@@ -5,18 +5,19 @@
 
 const User = require("../models/user");
 const { CustomError } = require("../errors/customError");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const {
   generateAccessToken,
   generateRefreshToken,
-  setTokenCookie,
   clearTokenCookie,
   verifyToken,
-} = require("../helpers/generateToken");
+  generateTokenAndSetCookie,
+  generateResetToken,
+} = require("../utils/generateToken");
 const otpGenerator = require("otp-generator");
 const {
   sendWelcomeEmail,
+  sendPasswordResetRequestEmail,
 } = require("../configs/email/verificationEmail/verificationEmail");
 
 module.exports = {
@@ -38,7 +39,7 @@ module.exports = {
       user.verificationToken = undefined;
       user.verificationTokenExpiresAt = undefined;
       await user.save();
-      await sendWelcomeEmail(user.email, user.firstName, user._id);
+      await sendWelcomeEmail(user._id, user.email, user.firstName, user._id);
 
       res.status(200).send({
         error: false,
@@ -48,7 +49,46 @@ module.exports = {
           password: undefined,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log("error in verifyEmail", error.message, error.stack);
+      res.status(500).send({
+        error: true,
+        message: "Server error",
+      });
+    }
+  },
+  forgotPassword: async (req, res) => {
+    const { email } = req.body;
+    try {
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).send({
+          error: true,
+          message: "User not found",
+        });
+      }
+
+      const resetToken = generateResetToken({ userId: user._id });
+      const resetTokenExpiresAt = Date.now() + 2 * 60 * 1000; // 2m
+
+      user.resetPasswordToken = resetToken;
+      user.resetPasswordExpiresAt = resetTokenExpiresAt;
+      await user.save();
+
+      // send email
+      await sendPasswordResetRequestEmail(
+        user.email,
+        user.firstName,
+        `${process.env.BASE_URL}/reset-password/${resetToken}`
+      );
+      return res.status(200).send({
+        error: false,
+        message: "Password reset email sent successfully.",
+      });
+    } catch (error) {
+      console.log("error in reset Password", error.message, error.stack);
+    }
   },
   login: async (req, res) => {
     /*
@@ -75,12 +115,20 @@ module.exports = {
       "+password"
     );
 
+    if (!user) {
+      return res.status(401).send({
+        error: true,
+        message:
+          "User not found. Please check your email or password and try again.",
+      });
+    }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      throw new CustomError(
-        "User not found. Please check your email or password and try again.",
-        401
-      );
+      return res.status(401).send({
+        error: true,
+        message:
+          "Incorrect password. Please check your password and try again.",
+      });
     }
     if (!user.isActive) {
       return res.status(401).send({
@@ -96,12 +144,13 @@ module.exports = {
       isActive: user.isActive,
       role: user.role,
     };
+    user.lastLogin = new Date();
 
     const accessToken = generateAccessToken(payload);
     const refreshToken = generateRefreshToken({ userId: user._id });
 
     // Write AccessToken to cookie
-    setTokenCookie(res, accessToken);
+    generateTokenAndSetCookie(res, accessToken);
 
     res.status(200).send({
       error: false,
@@ -182,10 +231,14 @@ module.exports = {
     });
   },
   logout: async (req, res) => {
-    clearTokenCookie(res);
-    return res.status(200).send({
+    res.clearCookie("sessionId");
+    res.status(200).send({
       error: false,
       message: "User successfully logged out",
+    });
+    return res.status(200).send({
+      error: false,
+      message: "Logged out successfully",
     });
   },
   unsubscribe: async (req, res) => {

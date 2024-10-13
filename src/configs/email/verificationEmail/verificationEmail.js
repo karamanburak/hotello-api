@@ -65,7 +65,7 @@ const welcomeEmailTemplate = (firstName, unsubscribeURL) => `
 </body>
 </html>
 `;
-const passwordResetRequestEmailTemplate = (resetURL) => {
+const passwordResetRequestEmailTemplate = (firstName, resetURL) => {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -79,7 +79,7 @@ const passwordResetRequestEmailTemplate = (resetURL) => {
     <h1 style="color: white; margin: 0;">Password Reset</h1>
   </div>
   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
+    <p>Hello ${firstName},</p>
     <p>We received a request to reset your password. If you didn't make this request, please ignore this email.</p>
     <p>To reset your password, click the button below:</p>
     <div style="text-align: center; margin: 30px 0;">
@@ -154,7 +154,7 @@ const sendVerificationEmail = async (email, verificationToken, firstName) => {
 };
 
 // Function to send welcome email
-const sendWelcomeEmail = async (email, firstName) => {
+const sendWelcomeEmail = async (userId, email, firstName) => {
   const subject = "Welcome to Hotello!";
 
   // Generate an unsubscribe token
@@ -181,9 +181,9 @@ const sendWelcomeEmail = async (email, firstName) => {
 };
 
 // Function to send password reset request
-const sendPasswordResetRequest = async (email, resetURL) => {
+const sendPasswordResetRequestEmail = async (email, firstName, resetURL) => {
   const subject = "Password Reset Request";
-  const template = passwordResetRequestEmailTemplate(resetURL);
+  const template = passwordResetRequestEmailTemplate(firstName, resetURL);
 
   try {
     const response = await sendMail(email, subject, template);
@@ -200,7 +200,7 @@ const sendPasswordResetRequest = async (email, resetURL) => {
 };
 
 // Function to send password reset confirmation
-const sendPasswordResetConfirmation = async (email) => {
+const sendPasswordResetConfirmationEmail = async (email) => {
   const subject = "Password Reset Successful";
   const template = passwordResetEmailTemplate;
 
@@ -224,6 +224,6 @@ const sendPasswordResetConfirmation = async (email) => {
 module.exports = {
   sendVerificationEmail,
   sendWelcomeEmail,
-  sendPasswordResetRequest,
-  sendPasswordResetConfirmation,
+  sendPasswordResetRequestEmail,
+  sendPasswordResetConfirmationEmail,
 };

@@ -6,15 +6,13 @@ const {
   generateAccessToken,
   generateRefreshToken,
   setTokenCookie,
-} = require("../helpers/generateToken");
+  generateTokenAndSetCookie,
+} = require("../utils/generateToken");
 /* -------------------------------------------------------
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
 
 const User = require("../models/user");
-const {
-  generateTokenAndSetCookie,
-} = require("../utils/generateTokenAndSetCookie");
 
 module.exports = {
   list: async (req, res) => {
