@@ -15,8 +15,41 @@ const {
   verifyToken,
 } = require("../helpers/generateToken");
 const otpGenerator = require("otp-generator");
+const {
+  sendWelcomeEmail,
+} = require("../configs/email/verificationEmail/verificationEmail");
 
 module.exports = {
+  verifyEmail: async (req, res) => {
+    const { code } = req.body;
+    try {
+      const user = await User.findOne({
+        verificationToken: code,
+        verificationTokenExpiresAt: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return res.status(400).send({
+          error: true,
+          message: "Verification code is invalid or expired.",
+        });
+      }
+      user.isVerified = true;
+      user.verificationToken = undefined;
+      user.verificationTokenExpiresAt = undefined;
+      await user.save();
+      await sendWelcomeEmail(user.email, user.firstName, user._id);
+
+      res.status(200).send({
+        error: false,
+        message: "Email verified successfully!",
+        user: {
+          ...user._doc,
+          password: undefined,
+        },
+      });
+    } catch (error) {}
+  },
   login: async (req, res) => {
     /*
             #swagger.tags = ["Authentication"]
@@ -154,5 +187,39 @@ module.exports = {
       error: false,
       message: "User successfully logged out",
     });
+  },
+  unsubscribe: async (req, res) => {
+    const { token } = req.params;
+    try {
+      const user = await User.findOne({
+        unsubscribeToken: token,
+        unsubscribeTokenExpiresAt: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return res.status(400).send({
+          error: true,
+          message: "Unsubscribe link is invalid or expired.",
+        });
+      }
+
+      // Mark the user as unsubscribed
+      user.isSubscribed = false;
+      user.unsubscribeToken = undefined;
+      user.unsubscribeTokenExpiresAt = undefined;
+
+      await user.save();
+
+      res.status(200).send({
+        error: false,
+        message: "You have been successfully unsubscribed from emails.",
+      });
+    } catch (error) {
+      res.status(500).send({
+        error: true,
+        message:
+          "An error occurred while unsubscribing. Please try again later.",
+      });
+    }
   },
 };

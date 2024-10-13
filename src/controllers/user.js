@@ -1,10 +1,12 @@
 "use strict";
 const {
+  sendVerificationEmail,
+} = require("../configs/email/verificationEmail/verificationEmail");
+const {
   generateAccessToken,
   generateRefreshToken,
   setTokenCookie,
 } = require("../helpers/generateToken");
-const sendMail = require("../configs/email/nodeMailer");
 /* -------------------------------------------------------
     EXPRESS - HOTEL API
 ------------------------------------------------------- */
@@ -88,13 +90,7 @@ module.exports = {
 
     //JWT
     generateTokenAndSetCookie(res, newUser._id);
-    sendVerificationEmail(newUser.email, verificationToken);
-
-    sendMail(
-      newUser.email,
-      "Welcome to the HOTELLO",
-      `<h1>Welcome ${firstName.toUpperCase()} ${lastName.toUpperCase()}</h1> <p>Your account successfully created</p>`
-    );
+    sendVerificationEmail(newUser.email, newUser.firstName, verificationToken);
 
     res.status(201).send({
       error: false,

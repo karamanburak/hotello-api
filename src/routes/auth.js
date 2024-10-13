@@ -4,19 +4,30 @@ EXPRESS - HOTEL API
 ------------------------------------------------------- */
 
 const router = require("express").Router();
-const auth = require("../controllers/auth");
+const {
+  login,
+  refresh,
+  logout,
+  generateOTP,
+  verifyOTP,
+  createResetSession,
+  resetPassword,
+  verifyEmail,
+  unsubscribe,
+} = require("../controllers/auth");
 
 //^ URL => "/auth"
 
-router.post("/login", auth.login);
-router.post("/refresh", auth.refresh);
-router.post("/logout", auth.logout);
-// router.post("/registerMail");
+router.post("/login", login);
+router.post("/refresh", refresh);
+router.post("/logout", logout);
+router.post("/verify-email", verifyEmail);
+router.post("/unsubscribe", unsubscribe);
 
-router.get("/generateOTP", auth.generateOTP);
-router.get("/verifyOTP", auth.verifyOTP);
-router.get("/createResetSession", auth.createResetSession);
+router.get("/generateOTP", generateOTP);
+router.get("/verifyOTP", verifyOTP);
+router.get("/createResetSession", createResetSession);
 
-router.put("/resetPassword", auth.resetPassword);
+router.put("/resetPassword", resetPassword);
 
 module.exports = router;
