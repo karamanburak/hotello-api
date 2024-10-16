@@ -6,6 +6,8 @@
 const User = require("../models/user");
 const { CustomError } = require("../errors/customError");
 const bcrypt = require("bcryptjs");
+const { promisify } = require("util");
+const crypto = require("crypto");
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -18,7 +20,8 @@ const otpGenerator = require("otp-generator");
 const {
   sendWelcomeEmail,
   sendPasswordResetRequestEmail,
-} = require("../configs/email/verificationEmail/verificationEmail");
+  sendPasswordResetConfirmationEmail,
+} = require("../configs/email/Email");
 
 module.exports = {
   verifyEmail: async (req, res) => {
@@ -63,31 +66,83 @@ module.exports = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).send({
-          error: true,
-          message: "User not found",
-        });
+        throw new CustomError("User not found", 404);
       }
 
       const resetToken = generateResetToken({ userId: user._id });
-      const resetTokenExpiresAt = Date.now() + 2 * 60 * 1000; // 2m
+      const resetTokenExpiresAt = Date.now() + 3 * 60 * 1000; // 3m
 
       user.resetPasswordToken = resetToken;
       user.resetPasswordExpiresAt = resetTokenExpiresAt;
       await user.save();
 
       // send email
-      await sendPasswordResetRequestEmail(
-        user.email,
-        user.firstName,
-        `${process.env.BASE_URL}/reset-password/${resetToken}`
-      );
+      const resetURL = `${process.env.BASE_URL}/reset-password/${resetToken}`;
+      await sendPasswordResetRequestEmail(user.email, user.firstName, resetURL);
       return res.status(200).send({
         error: false,
         message: "Password reset email sent successfully.",
       });
     } catch (error) {
       console.log("error in reset Password", error.message, error.stack);
+    }
+  },
+  resetPassword: async (req, res) => {
+    console.log("Reset password process started");
+    const { token } = req.params;
+    const { password } = req.body;
+
+    // Required fields control
+    if (!password || !token) {
+      throw new CustomError("Missing required fields!", 400);
+    }
+
+    // Verify and decode the JWT token
+    let decoded;
+    try {
+      decoded = await verifyToken(token, process.env.RESET_KEY);
+    } catch (err) {
+      console.log("Token verification failed:", err.message);
+      return res.status(400).send({
+        error: true,
+        message: err.message,
+      });
+    }
+
+    // Find user by id
+    const user = await User.findOne({
+      _id: decoded.userId,
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      throw new CustomError("No user found with this email", 404);
+    }
+
+    if (!user.resetPasswordToken || user.resetPasswordToken !== token) {
+      throw new CustomError("Invalid or expired reset token", 400);
+    }
+
+    if (Date.now() > user.resetPasswordExpiresAt) {
+      throw new CustomError("Reset token has expired", 400);
+    }
+
+    const hashedNewPassword = await bcrypt.hash(password, 10);
+    user.password = hashedNewPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresAt = undefined;
+
+    try {
+      await user.save();
+      await sendPasswordResetConfirmationEmail(user.email, user.firstName);
+
+      res.status(200).send({
+        error: false,
+        message: "Your password has been successfully reset!",
+      });
+    } catch (error) {
+      console.error("Error saving new password:", error);
+      throw new CustomError("Failed to reset password", 500);
     }
   },
   login: async (req, res) => {
@@ -200,7 +255,6 @@ module.exports = {
       throw new CustomError("Invalid or expired refresh token!", 401);
     }
   },
-
   generateOTP: async (req, res) => {
     let OTP = await otpGenerator.generate(6, {
       lowerCaseAlphabets: false,

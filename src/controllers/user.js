@@ -1,12 +1,11 @@
 "use strict";
-const {
-  sendVerificationEmail,
-} = require("../configs/email/verificationEmail/verificationEmail");
+const { sendVerificationEmail } = require("../configs/email/Email");
 const {
   generateAccessToken,
   generateRefreshToken,
   setTokenCookie,
   generateTokenAndSetCookie,
+  generateVerificationCode,
 } = require("../utils/generateToken");
 /* -------------------------------------------------------
     EXPRESS - HOTEL API
@@ -72,9 +71,7 @@ module.exports = {
       });
     }
 
-    const verificationToken = Math.floor(
-      10000 + Math.random() * 900000
-    ).toString();
+    const verificationToken = generateVerificationCode(6);
 
     const newUser = await User.create({
       username,

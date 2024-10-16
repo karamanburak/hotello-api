@@ -1,12 +1,11 @@
 "use strict";
 
-const { CustomError } = require("../../../errors/customError");
-const User = require("../../../models/user");
+const { CustomError } = require("../../errors/customError");
+const User = require("../../models/user");
 const crypto = require("crypto");
-const sendMail = require("../nodeMailer");
+const sendMail = require("./nodeMailer");
 
 const sendVerificationEmailTemplate = (
-  email,
   firstName,
   verificationCode,
   unsubscribeURL
@@ -61,6 +60,7 @@ const welcomeEmailTemplate = (firstName, unsubscribeURL) => `
   </div>
   <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
     <p>This is an automated message, please do not reply to this email.</p>
+    <p>If you no longer wish to receive emails from us, you can unsubscribe<a href="${unsubscribeURL}" style="color: #3b82f6; text-decoration: none;"> here</a>.</p>
   </div>
 </body>
 </html>
@@ -85,7 +85,7 @@ const passwordResetRequestEmailTemplate = (firstName, resetURL) => {
     <div style="text-align: center; margin: 30px 0;">
       <a href="${resetURL}" style="background-color: #FFA726; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
     </div>
-    <p>This link will expire in 2 minutes for security reasons.</p>
+    <p>This link will expire in 3 minutes for security reasons.</p>
     <p>Best regards,<br>Your Hotello Team</p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
@@ -96,7 +96,7 @@ const passwordResetRequestEmailTemplate = (firstName, resetURL) => {
 `;
 };
 
-const passwordResetEmailTemplate = `
+const passwordResetConfirmationEmailTemplate = (firstName) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,7 +109,7 @@ const passwordResetEmailTemplate = `
     <h1 style="color: white; margin: 0;">Password Reset Successful</h1>
   </div>
   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
+    <p>Hello ${firstName},</p>
     <p>We're writing to confirm that your password has been successfully reset.</p>
     <div style="text-align: center; margin: 30px 0;">
       <div style="background-color: #4CAF50; color: white; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; display: inline-block; font-size: 30px;">
@@ -135,11 +135,7 @@ const passwordResetEmailTemplate = `
 
 const sendVerificationEmail = async (email, verificationToken, firstName) => {
   const subject = "Verify your email";
-  const template = sendVerificationEmailTemplate(
-    email,
-    verificationToken,
-    firstName
-  );
+  const template = sendVerificationEmailTemplate(verificationToken, firstName);
 
   try {
     const response = await sendMail(email, subject, template);
@@ -200,9 +196,9 @@ const sendPasswordResetRequestEmail = async (email, firstName, resetURL) => {
 };
 
 // Function to send password reset confirmation
-const sendPasswordResetConfirmationEmail = async (email) => {
+const sendPasswordResetConfirmationEmail = async (email, firstName) => {
   const subject = "Password Reset Successful";
-  const template = passwordResetEmailTemplate;
+  const template = passwordResetConfirmationEmailTemplate(firstName);
 
   try {
     const response = await sendMail(email, subject, template);

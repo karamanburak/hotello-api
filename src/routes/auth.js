@@ -11,9 +11,9 @@ const {
   generateOTP,
   verifyOTP,
   createResetSession,
+  forgotPassword,
   resetPassword,
   verifyEmail,
-  forgotPassword,
   unsubscribe,
 } = require("../controllers/auth");
 
@@ -24,12 +24,11 @@ router.post("/refresh", refresh);
 router.post("/logout", logout);
 router.post("/verify-email", verifyEmail);
 router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:token", resetPassword);
 router.post("/unsubscribe", unsubscribe);
 
 router.get("/generateOTP", generateOTP);
 router.get("/verifyOTP", verifyOTP);
 router.get("/createResetSession", createResetSession);
-
-router.put("/resetPassword", resetPassword);
 
 module.exports = router;

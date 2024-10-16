@@ -20,6 +20,16 @@ const verifyToken = async (token, secretKey) => {
   }
 };
 
+// Function to generate a 6-digit verification code
+const generateVerificationCode = (length = 6) => {
+  const characters = "0123456789"; // Only digits for the verification code
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+};
+
 // Function to create an Access Token
 const generateAccessToken = (payload) => {
   return generateToken(
@@ -43,7 +53,7 @@ const generateResetToken = (userId) => {
   return generateToken(
     { userId },
     process.env.RESET_KEY,
-    process.env.RESET_EXP || "2"
+    process.env.RESET_EXP || "3m"
   );
 };
 
@@ -79,6 +89,7 @@ module.exports = {
   generateRefreshToken,
   generateResetToken,
   verifyToken,
+  generateVerificationCode,
   generateTokenAndSetCookie,
   getTokenFromCookies,
   clearTokenCookie,
