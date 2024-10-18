@@ -55,8 +55,9 @@ const generateRefreshToken = (payload) => {
 
 // Function to create a Reset Token (e.g., for password reset)
 const generateResetToken = (userId) => {
+  // console.log("Generating reset token for userId:", userId);
   return generateToken(
-    { userId },
+    { userId: userId.toString() },
     process.env.RESET_KEY,
     process.env.RESET_EXP || "3m"
   );

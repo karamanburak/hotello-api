@@ -13,14 +13,10 @@ module.exports = {
     next();
   },
 
-  authMiddleware: async (req, res, next) => {
+  authChecker: async (req, res, next) => {
     try {
-      console.log("Authorization header:", req.headers.authorization);
       console.log("Cookies:", req.cookies);
-      const token =
-        (req.headers.authorization &&
-          req.headers.authorization.split(" ")[1]) ||
-        req.cookies.sessionId;
+      const token = req.cookies.sessionId;
 
       if (!token) {
         throw new CustomError("Unauthorized - No token provided!", 401);
@@ -28,11 +24,10 @@ module.exports = {
 
       const decoded = await verifyToken(token, process.env.ACCESS_KEY);
       req.userId = decoded.userId;
-      console.log(req.userId);
 
       next();
     } catch (error) {
-      console.log("Error in authMiddleware:", error.message);
+      console.log("Error in authChecker:", error.message);
       if (error instanceof CustomError) {
         return res
           .status(error.statusCode)

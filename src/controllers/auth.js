@@ -6,8 +6,7 @@
 const User = require("../models/user");
 const { CustomError } = require("../errors/customError");
 const bcrypt = require("bcryptjs");
-const { promisify } = require("util");
-const crypto = require("crypto");
+
 const {
   generateAccessToken,
   generateRefreshToken,
@@ -69,7 +68,9 @@ module.exports = {
         throw new CustomError("User not found", 404);
       }
 
-      const resetToken = generateResetToken({ userId: user._id });
+      const resetToken = generateResetToken(user._id.toString());
+      // console.log(resetToken);
+
       const resetTokenExpiresAt = Date.now() + 3 * 60 * 1000; // 3m
 
       user.resetPasswordToken = resetToken;
@@ -88,7 +89,7 @@ module.exports = {
     }
   },
   resetPassword: async (req, res) => {
-    console.log("Reset password process started");
+    // console.log("Reset password process started");
     const { token } = req.params;
     const { password } = req.body;
 
@@ -101,6 +102,7 @@ module.exports = {
     let decoded;
     try {
       decoded = await verifyToken(token, process.env.RESET_KEY);
+      // console.log("Decoded token:", decoded);
     } catch (err) {
       console.log("Token verification failed:", err.message);
       return res.status(400).send({
@@ -109,12 +111,18 @@ module.exports = {
       });
     }
 
+    const userId = decoded.userId;
+
+    if (typeof userId !== "string") {
+      throw new CustomError("Invalid userId type. Expected a string.", 400);
+    }
+
     // Find user by id
     const user = await User.findOne({
       _id: decoded.userId,
       resetPasswordToken: token,
       resetPasswordExpiresAt: { $gt: Date.now() },
-    });
+    }).select("+password");
     if (!user) {
       throw new CustomError("No user found with this email", 404);
     }
@@ -134,6 +142,7 @@ module.exports = {
 
     try {
       await user.save();
+      const updatedUser = await User.findById(user._id);
       await sendPasswordResetConfirmationEmail(user.email, user.firstName);
 
       res.status(200).send({
@@ -146,30 +155,6 @@ module.exports = {
     }
   },
 
-  checkAuth: async (req, res) => {
-    try {
-      const user = await User.findById(req.userId);
-      if (!user) {
-        throw new CustomError("User not found", 404);
-      }
-      res.status(200).send({
-        error: false,
-        message: "User authenticated successfully",
-        user,
-      });
-    } catch (error) {
-      console.log("Error in checkAuth", error.message);
-      if (error instanceof CustomError) {
-        return res
-          .status(error.statusCode)
-          .send({ error: true, message: error.message });
-      }
-      res.status(500).send({
-        error: true,
-        message: "Internal server error",
-      });
-    }
-  },
   login: async (req, res) => {
     /*
             #swagger.tags = ["Authentication"]
@@ -202,7 +187,12 @@ module.exports = {
           "User not found. Please check your email or password and try again.",
       });
     }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    console.log("Input password:", password); // Kullanıcının girdiği şifre
+    console.log("Stored password hash:", user.password); // Veritabanındaki hash
+    console.log("Password match result:", isPasswordCorrect); // Eşleşme sonucu
+
     if (!isPasswordCorrect) {
       return res.status(401).send({
         error: true,
@@ -241,6 +231,30 @@ module.exports = {
       },
       user,
     });
+  },
+  checkAuth: async (req, res) => {
+    try {
+      const user = await User.findById(req.userId);
+      if (!user) {
+        throw new CustomError("User not found", 404);
+      }
+      res.status(200).send({
+        error: false,
+        message: "User authenticated successfully",
+        user,
+      });
+    } catch (error) {
+      console.log("Error in checkAuth", error.message);
+      if (error instanceof CustomError) {
+        return res
+          .status(error.statusCode)
+          .send({ error: true, message: error.message });
+      }
+      res.status(500).send({
+        error: true,
+        message: "Internal server error",
+      });
+    }
   },
   refresh: async (req, res) => {
     const refreshToken = req.body?.bearer?.refresh;
@@ -301,12 +315,6 @@ module.exports = {
     res.status(200).send({
       error: false,
       message: "Reset session created successfully",
-    });
-  },
-  resetPassword: async (req, res) => {
-    res.status(200).send({
-      error: false,
-      message: "Password reset successfully",
     });
   },
   logout: async (req, res) => {

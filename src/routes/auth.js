@@ -17,11 +17,11 @@ const {
   unsubscribe,
   checkAuth,
 } = require("../controllers/auth");
-const { authMiddleware } = require("../middlewares/idValidation");
+const { authChecker } = require("../middlewares/idValidation");
 
 //^ URL => "/auth"
 
-router.get("/check-auth", authMiddleware, checkAuth);
+router.get("/check-auth", authChecker, checkAuth);
 
 router.post("/login", login);
 router.post("/refresh", refresh);
