@@ -145,6 +145,31 @@ module.exports = {
       throw new CustomError("Failed to reset password", 500);
     }
   },
+
+  checkAuth: async (req, res) => {
+    try {
+      const user = await User.findById(req.userId);
+      if (!user) {
+        throw new CustomError("User not found", 404);
+      }
+      res.status(200).send({
+        error: false,
+        message: "User authenticated successfully",
+        user,
+      });
+    } catch (error) {
+      console.log("Error in checkAuth", error.message);
+      if (error instanceof CustomError) {
+        return res
+          .status(error.statusCode)
+          .send({ error: true, message: error.message });
+      }
+      res.status(500).send({
+        error: true,
+        message: "Internal server error",
+      });
+    }
+  },
   login: async (req, res) => {
     /*
             #swagger.tags = ["Authentication"]
@@ -285,15 +310,16 @@ module.exports = {
     });
   },
   logout: async (req, res) => {
-    res.clearCookie("sessionId");
-    res.status(200).send({
-      error: false,
-      message: "User successfully logged out",
-    });
-    return res.status(200).send({
-      error: false,
-      message: "Logged out successfully",
-    });
+    try {
+      clearTokenCookie(res); // Clear the sessionId cookie
+      res.status(200).send({
+        error: false,
+        message: "Logout successful!",
+      });
+    } catch (error) {
+      console.log("Error in logout:", error.message);
+      res.status(500).send({ error: true, message: "Internal server error" });
+    }
   },
   unsubscribe: async (req, res) => {
     const { token } = req.params;

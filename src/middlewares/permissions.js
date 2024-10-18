@@ -42,6 +42,15 @@ module.exports = {
     }
   },
 
+  checkEmailVerification: (req, res, next) => {
+    // if (!NODE_ENV) return next();
+    if (req.user.isVerified) {
+      return next();
+    } else {
+      throw new CustomError("NoPermission: Account not verified!", 403);
+    }
+  },
+
   isLoginAdmin: (req, res, next) => {
     if (
       req.user &&

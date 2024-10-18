@@ -4,7 +4,7 @@
 ------------------------------------------------------- */
 const router = require("express").Router();
 const room = require("../controllers/room");
-const idValidation = require("../middlewares/idValidation");
+const { idIsValid } = require("../middlewares/idValidation");
 const permissions = require("../middlewares/permissions");
 const upload = require("../middlewares/upload");
 /* ------------------------------------------------------- */
@@ -15,7 +15,7 @@ router
   .post(permissions.isAdmin, upload.array("images"), room.create);
 router
   .route("/:id")
-  .all(idValidation)
+  .all(idIsValid)
   .get(room.read)
   .put(permissions.isAdmin, room.update)
   .patch(permissions.isAdmin, room.update)

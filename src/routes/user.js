@@ -5,7 +5,7 @@
 const router = require("express").Router();
 /* ------------------------------------------------------- */
 const user = require("../controllers/user");
-const idValidation = require("../middlewares/idValidation");
+const { idIsValid } = require("../middlewares/idValidation");
 const permissions = require("../middlewares/permissions");
 const upload = require("../middlewares/upload");
 
@@ -16,7 +16,7 @@ router
 
 router
   .route("/:id")
-  .all(idValidation, permissions.isLogin)
+  .all(idIsValid, permissions.isLogin)
   .get(user.read)
   .put(upload.array("avatar"), user.update)
   .patch(upload.array("avatar"), user.update)

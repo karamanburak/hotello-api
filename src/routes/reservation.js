@@ -9,7 +9,7 @@ const {
   isAdmin,
   canManageReservation,
 } = require("../middlewares/permissions");
-const idValidation = require("../middlewares/idValidation");
+const { idIsValid } = require("../middlewares/idValidation");
 
 /* ------------------------------------------------------- */
 
@@ -19,7 +19,7 @@ router
   .post(isLogin, reservation.create);
 router
   .route("/:id")
-  .all(idValidation)
+  .all(idIsValid)
   .get(isLogin, canManageReservation, reservation.read)
   .put(isLogin, canManageReservation, reservation.update)
   .patch(isLogin, canManageReservation, reservation.update)

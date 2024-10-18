@@ -10,7 +10,7 @@ const {
   isAdmin,
   canManageReview,
 } = require("../middlewares/permissions");
-const idValidation = require("../middlewares/idValidation");
+const { idIsValid } = require("../middlewares/idValidation");
 
 /* ------------------------------------------------------- */
 
@@ -18,7 +18,7 @@ router.route("/").get(review.list).post(isLogin, review.create);
 
 router
   .route("/:id")
-  .all(idValidation)
+  .all(idIsValid)
   .get(review.read)
   .put(isLogin, canManageReview, review.update)
   .patch(isLogin, canManageReview, review.update)

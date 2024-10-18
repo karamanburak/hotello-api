@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { CustomError } = require("../errors/customError");
+const { promisify } = require("util");
 
 // Function to generate a JWT token
 const generateToken = (payload, secretKey, expiresIn) => {
@@ -7,17 +8,21 @@ const generateToken = (payload, secretKey, expiresIn) => {
 };
 
 // Function to verify a JWT token
-const verifyToken = async (token, secretKey) => {
-  try {
-    const decoded = await promisify(jwt.verify)(token, secretKey);
-    return decoded;
-  } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      throw new CustomError("Token has expired. Please log in again.", 401);
-    } else {
-      throw new CustomError("Invalid token.", 401);
-    }
-  }
+const verifyToken = (token, secretKey) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secretKey, (error, decoded) => {
+      if (error) {
+        if (error.name === "TokenExpiredError") {
+          return reject(
+            new CustomError("Token has expired. Please log in again.", 401)
+          );
+        }
+        console.log("Error in verifyToken:", error);
+        return reject(new CustomError("Invalid token.", 401));
+      }
+      resolve(decoded);
+    });
+  });
 };
 
 // Function to generate a 6-digit verification code
@@ -35,7 +40,7 @@ const generateAccessToken = (payload) => {
   return generateToken(
     payload,
     process.env.ACCESS_KEY,
-    process.env.ACCESS_EXP || "1h" // Default expiration is 1 day
+    process.env.ACCESS_EXP || "1d" // Default expiration is 1 day
   );
 };
 
@@ -58,7 +63,7 @@ const generateResetToken = (userId) => {
 };
 
 // Function to write the token to a cookie
-const generateTokenAndSetCookie = (res, token, options = {}) => {
+const generateTokenAndSetCookie = (res, token) => {
   const defaultOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

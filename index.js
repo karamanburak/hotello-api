@@ -30,7 +30,6 @@ app.use(cors(corsOptions));
 require("dotenv").config();
 const PORT = process.env.PORT || 8000;
 
-app.use(cookieParser());
 require("express-async-errors");
 
 /* -------------------------------------------------------------------------- */
@@ -44,6 +43,7 @@ dbConnection();
 /*                               MIDDLEWARES                                  */
 /* -------------------------------------------------------------------------- */
 app.use(express.json()); // allows us to parse incoming requests:req.body
+app.use(cookieParser()); // allows us to parse incoming cookies
 
 app.use(require("./src/middlewares/queryHandler"));
 
