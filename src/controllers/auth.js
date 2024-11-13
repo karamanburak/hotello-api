@@ -20,11 +20,12 @@ const {
   sendWelcomeEmail,
   sendPasswordResetRequestEmail,
   sendPasswordResetConfirmationEmail,
-} = require("../configs/email/Email");
+} = require("../configs/email/emails");
 
 module.exports = {
   verifyEmail: async (req, res) => {
     const { code } = req.body;
+    console.log("Received verification code:", code);
     try {
       const user = await User.findOne({
         verificationToken: code,
@@ -58,6 +59,44 @@ module.exports = {
         message: "Server error",
       });
     }
+  },
+  verifyEmailResend: async (req, res) => {
+    const { resetToken, resetCode, email } = req.body;
+
+    if (!email || !resetToken || !resetCode) {
+      throw new CustomError(
+        "Email, reset token, and reset code are required",
+        400
+      );
+    }
+    let decoded;
+    try {
+      decoded = jwt.verify(resetToken, RESET_KEY);
+    } catch (err) {
+      return res.status(400).send({
+        error: true,
+        message: "Invalid or expired reset token",
+      });
+    }
+
+    if (decoded.email !== email || decoded.code !== resetCode) {
+      return res.status(400).send({
+        error: true,
+        message: "Invalid reset code or email",
+      });
+    }
+
+    const newResetToken = jwt.sign(
+      { userId: decoded.userId, email: decoded.email, isVerified: true },
+      RESET_PASSWORD_KEY,
+      { expiresIn: "15m" }
+    );
+
+    return res.status(200).send({
+      error: false,
+      resetToken: newResetToken,
+      message: "Reset token verified successfully",
+    });
   },
   forgotPassword: async (req, res) => {
     const { email } = req.body;

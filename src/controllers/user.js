@@ -1,5 +1,5 @@
 "use strict";
-const { sendVerificationEmail } = require("../configs/email/Email");
+const { sendVerificationEmail } = require("../configs/email/emails");
 const {
   generateAccessToken,
   generateRefreshToken,

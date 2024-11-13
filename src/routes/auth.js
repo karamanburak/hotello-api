@@ -14,6 +14,7 @@ const {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  verifyEmailResend,
   unsubscribe,
   checkAuth,
 } = require("../controllers/auth");
@@ -27,6 +28,7 @@ router.post("/login", login);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
 router.post("/verify-email", verifyEmail);
+router.post("/resend-verification-code", verifyEmailResend);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 router.post("/unsubscribe", unsubscribe);
