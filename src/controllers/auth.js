@@ -228,9 +228,9 @@ module.exports = {
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    console.log("Input password:", password); // Kullanıcının girdiği şifre
-    console.log("Stored password hash:", user.password); // Veritabanındaki hash
-    console.log("Password match result:", isPasswordCorrect); // Eşleşme sonucu
+    console.log("Input password:", password);
+    console.log("Stored password hash:", user.password);
+    console.log("Password match result:", isPasswordCorrect);
 
     if (!isPasswordCorrect) {
       return res.status(401).send({
